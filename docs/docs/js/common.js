@@ -6,13 +6,19 @@ console.log( "agent = " + agent );
 var isChromeOS = ( agent.indexOf("Chrome OS") > -1 || agent.indexOf("Chromebook")>-1 || agent.indexOf("PixelBook")>-1 ); 
 var useWebIDE = ( agent.indexOf("Remix") > -1 || isChromeOS );
 var isAndroid = ( agent.indexOf("Android") > -1 );
-var isDS = ( agent.indexOf("; wv)")>-1 );
+var isDS = ( agent.indexOf("; wv)") > -1 );
 var serverAddress = "";
-var curTheme;
+
+// set current theme
+var curTheme = location.href.match(/[^?]*[?&]theme=([^&]*)/);
+if(curTheme && history.replaceState)
+    try { history.replaceState({}, "Documentation", "Docs.htm"); } catch(e) {}
+setTheme(curTheme ? curTheme[1] : getTheme());
 
 //Hook into cross frame messaging
 window.addEventListener("message", function(event) 
-{
+{console.log("message")
+    console.log("msg: "+event)
 	var params = event.data.split("|");
 	var cmd = params[0];
 
@@ -25,7 +31,7 @@ window.addEventListener("message", function(event)
 //Change defaults.
 //Note: I have also modified animation-duration:350ms->100ms in JQM css files;
 $(document).on("mobileinit", function()
-{
+{console.log("init")
 	//$.extend( $.mobile , { ajaxEnabled: false }); //<-- so #bookmarks work.
 	$.mobile.defaultPageTransition = 'none'; //'fade';
 	$.mobile.buttonMarkup.hoverDelay = 10;
@@ -43,15 +49,22 @@ $(document).on("mobileinit", function()
 	if(!isDS) app.ShowPopup = ShowPopup;
 		
 	//Ask parent for DS adddress.
-	parent.postMessage( "getaddress:", "*" )
+	parent.postMessage( "getaddress:", "*" );
+
+    // check theme in other browsers after history fwd/bck
+	// workaround for pages being loaded from cache
+	if(!isDS && !useWebIDE) setInterval(function()
+    {
+        if(curTheme != getTheme()) setTheme(getTheme());
+    }, 200);
 });
  
 $(document).ready(function () 
-{
+{console.log("ready")
 });
 
 $(document).live( 'pageshow',function(event, ui)
-{
+{console.log("show")
 	//try
 	{
 		//Remove IOIO links if not relevent.
@@ -83,17 +96,6 @@ $(document).live( 'pageshow',function(event, ui)
 		if( curPage=="plugins" ) {
 			OnPageShow();
 		}
-		
-		// set current document theme
-		var theme = getTheme();
-		console.log("setTheme(" + theme + ")");
-		setTheme(theme);
-		
-		// check if theme changed, even after history.back()
-		setInterval(function() {
-			var theme = getTheme();
-			if(theme != curTheme) setTheme(theme);
-		}, 1000);
 	}
 	//catch( e ) {}
 });
@@ -162,8 +164,10 @@ function OnPageShow()
 // set the current theme. (default, dark)
 function setTheme( theme )
 {
+    if(curTheme == theme) return;
 	curTheme = theme;
-	document.cookie = "theme=" + theme;
+	window.name = window.name.replace(/\bdsDocsTheme=.*?;|^/, "dsDocsTheme=" + theme + ";");
+	console.log("setTheme('" + theme + "')");
 	
 	var lnkJQuery = document.getElementById('themeJQ');
 	if(lnkJQuery) lnkJQuery.href = lnkJQuery.href.replace(/(.*\/).*/, "$1theme-" + theme + ".min.css");
@@ -175,16 +179,16 @@ function setTheme( theme )
 	if(lnkPrism) lnkPrism.href = lnkPrism.href.replace(/(.*\/).*/, "$1" + theme + ".min.css");
 }
 
-// get current theme from cookie
+// get current theme from localStorage
 function getTheme() {
-	var theme = document.cookie.replace(/(^|.*;\s*)theme\s*\=\s*([^;]*).*$|^.*$/, "$2");
-	if(!theme) theme = "default";
-	return theme;
+    return window.name.replace(/\bdsDocsTheme=(.*?);/, "$1") || "default";
 }
 
+// app.ShowPopup equivalent for browsers 
 function ShowPopup(msg){
     var pop = $("#appPopup");
-    if(pop.is(":visible")) pop.stop().fadeOut(200, function() { pop.text(msg); });
+    if(pop.is(":visible")) pop.stop().fadeOut(100, function() { pop.text(msg); });
     else pop.text(msg);
-    pop.fadeIn().delay(1500).fadeOut();
+    pop.fadeIn(200).delay(1500).fadeOut(200);
 }
+
