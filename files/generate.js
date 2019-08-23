@@ -253,7 +253,8 @@ function getDocData( f, useAppPop ) {
 				args.push( toArgPop( met.pNames[i], met.pTypes[i] ) );
 			}
 			
-			pop = descPopup( met.name, `<b>${f.abbrev}.${met.name}</b><br>` + replW( met.desc) );
+			pop = descPopup( met.name, `<b>${f.abbrev}.${met.name}</b><br>` +
+			    replW( met.desc.replace("<premium>", premiumHint) ));
 			tryAddType( pop.fnc );
 			
 			methods += subfBase.replace( "%s", pop.txt + ( args.length ? 
@@ -288,10 +289,15 @@ function getDesc(name) {
 			`.</p>\n${funcBase}\t\t\t<p>`)
 		// replace <js> and <bash> tags with sample
 		.replace(
-			/(\s|<br>)*<(js|bash)>\s*([^]*?)\s*<\/\2>(\s|<br>)*/g, (m, _, lang, code) =>
-			    `</p>\n${funcBase.replace("%s", Prism.languages[lang] ?
-			    Prism.highlight(code.replace(/<br>/g, "\n").replace(/&#160;/g, "§s§"), Prism.languages[lang], lang)
-			    .replace(/§s§/g, "&#160;").replace(/\n/g, "<br>") : code)}\t\t\t<p>`)
+			/(\s|<br>)*<(js|bash|smp)>\s*([^]*?)\s*<\/\2>(\s|<br>)*/g, (m, _, lang, code) =>
+			    `</p>\n${funcBase //(code.indexOf("\n") > -1 ? funcBase : "\t\t\t" + funcBase.replace(/\n|\t/g, ""))
+			        .replace("%s", Prism.languages[lang] ?
+			            Prism.highlight(
+			                code.replace(/<br>/g, "\n").replace(/&#160;/g, "§s§"),
+			                Prism.languages[lang], lang
+			            ).replace(/§s§/g, "&#160;").replace(/\n/g, "<br>")
+			            : code
+		            )}\t\t\t<p>`)
 	    // format html code on linebreaks
 		.replace(/\s*<br>\s*/g, "<br>\n\t\t\t")
 		// expandable samples (per <sample name> tag or add to desc)
@@ -805,6 +811,7 @@ var 	//globals for one doc
 		"str_flt":"float",
 		"str_fmt":"format",
 		"str_htm":"html code",
+		"str_hex":"hexadecimal “00”..“FF”",
 		"str_int":"integer",
 		"str_jsc":"javascript code",
 		"str_lst":"separated",
@@ -828,7 +835,7 @@ var 	//globals for one doc
 
 var 
 	// hide functions and methods which are matching this regex
-	regHide = /^(_[\w\W]*|Create(Object|GLView|ListView)|GetLast.*|(Set|Is)DebugEnabled|Odroid|Draw|Destroy|Release|Explode|Detailed|IsEngine|SetOnTouchEx|data|id|S?Obj)$/,
+	regHide = /^(_[\w\W]*|Create(Object|GLView|ListView)|GetLast.*|(Set|Is)DebugEnabled|Odroid|Draw|Destroy|Release|Explode|Detailed|IsEngine|SetOn(Touch|Connect)Ex|data|id|S?Obj)$/,
 		// interpret matching app. functions as control constructors
 	regControl = /^(Create(?!Debug).*|OpenDatabase|Odroid)$/,
 		// defined in OnStart or later
