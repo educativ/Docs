@@ -218,12 +218,12 @@
 		"shortDesc": "Returns an AudioRecorder object",
 		"subf": {
 			"GetData": {
-				"desc": "Returns a list of 320 frequency values.",
+				"desc": "Returns a list of frequency values. The amount is dependent on the set frequency.",
 				"isfunc": true,
 				"name": "GetData",
 				"pNames": [],
 				"pTypes": [],
-				"retval": "lst-[frequencies:num_int]",
+				"retval": "lst-[ frequencies:num_int ]",
 				"shortDesc": "Returns a new list of frequency values"
 			},
 			"GetPeak": {
@@ -1143,7 +1143,7 @@
 				"name": "InsertText",
 				"pNames": ["text"],
 				"pTypes": ["str"],
-				"shortDesc": "Insert text at the current cursor position"
+				"shortDesc": "Insert text at the cursor"
 			},
 			"IsEnabled": "#1744802827",
 			"IsOverlap": "#1785728721",
@@ -1945,6 +1945,320 @@
 			"Tween": "#2114624769"
 		}
 	},
+	"CreateGLView": {
+		"abbrev": "glv",
+		"desc": "Returns a GLView object.",
+		"isfunc": true,
+		"name": "CreateGLView",
+		"pNames": ["width", "height", "options"],
+		"pTypes": ["num_srw", "num_srh", "str-fast2d"],
+		"retval": "GLView",
+		"shortDesc": "returns a GLView object.",
+		"subf": {
+			"aspect": {
+				"desc": "width/height relation",
+				"isfunc": false,
+				"name": "aspect",
+				"pNames": [],
+				"pTypes": [],
+				"retval": "num_flt",
+				"shortDesc": ""
+			},
+			"canvas": {
+				"desc": "[HTMLDivElement]",
+				"isfunc": false,
+				"name": "canvas",
+				"pNames": [],
+				"pTypes": [],
+				"retval": "obj",
+				"shortDesc": ""
+			},
+			"ClearFocus": "#1362225380",
+			"CreateImage": {
+				"desc": "create dso_glv can be drawn on GLV",
+				"isfunc": true,
+				"name": "CreateImage",
+				"pNames": ["file", "callback"],
+				"pTypes": ["str_pth", {
+						"desc": "Callback",
+						"isfunc": true,
+						"name": "callback",
+						"pNames": [],
+						"pTypes": [],
+						"retval": "",
+						"shortDesc": "callback"
+					}],
+				"retval": "dso_glv",
+				"shortDesc": ""
+			},
+			"ctx.clearRect": {
+				"desc": "<deprecated ctx is automatically cleared after render()>",
+				"isfunc": true,
+				"name": "ctx.clearRect",
+				"pNames": ["x", "y", "width", "height"],
+				"pTypes": ["num_pxl", "num_pxl", "num_pxl", "num_pxl"],
+				"retval": "",
+				"shortDesc": "deprecated"
+			},
+			"ctx._drawCommands": {
+				"desc": "",
+				"isfunc": false,
+				"name": "ctx._drawCommands",
+				"pNames": [],
+				"pTypes": [],
+				"retval": "str",
+				"shortDesc": ""
+			},
+			"ctx._globalAlpha": {
+				"desc": "",
+				"isfunc": false,
+				"name": "ctx._globalAlpha",
+				"pNames": [],
+				"pTypes": [],
+				"retval": "num_frc",
+				"shortDesc": ""
+			},
+			"ctx.capture": {
+				"desc": "Captures the current cached context to a png image.\nThe path is relative to /sdcard but requires a leading '/', ie “/Pictures/mycapture.png”",
+				"isfunc": true,
+				"name": "ctx.capture",
+				"pNames": ["x", "y", "w", "h", "fileName",
+					"successCallback", "errorCallback"
+				],
+				"pTypes": ["num_pxl", "num_pxl", "num_pxl", "num_pxl", "str:“/sdcard_relative”", "fnc", "fnc"],
+				"retval": "",
+				"shortDesc": "Captures the canvas to a png image"
+			},
+			"ctx.drawImage": {
+				"desc": "Draws a part of a glv image to the glv context, where s are source coordinates and d destination coordinates.",
+				"isfunc": true,
+				"name": "ctx.drawImage",
+				"pNames": ["image", "sx", "sy", "sw", "sh", "dx",
+					"dy", "dw", "dh"
+				],
+				"pTypes": ["obj-glv Image", "num_pxl", "num_pxl", "num_pxl", "num_pxl", "num_pxl", "num_pxl", "num_pxl",
+					"num_pxl"],
+				"retval": "",
+				"shortDesc": "Draws part of a sprite to the context"
+			},
+			"ctx.loadTexture": {
+				"desc": "",
+				"isfunc": true,
+				"name": "ctx.loadTexture",
+				"pNames": ["image", "successCallback",
+					"errorCallback"],
+				"pTypes": ["?", "?", "?"],
+				"retval": "?",
+				"shortDesc": ""
+			},
+			"ctx.render": {
+				"desc": "render the draw commands to the context",
+				"isfunc": true,
+				"name": "ctx.render",
+				"pNames": [],
+				"pTypes": [],
+				"retval": "",
+				"shortDesc": "render draw commands"
+			},
+			"ctx.resetTransform": {
+				"desc": "Reset all transformations to default",
+				"isfunc": true,
+				"name": "ctx.resetTransform",
+				"pNames": [],
+				"pTypes": [],
+				"retval": "",
+				"shortDesc": "Reset all transformations"
+			},
+			"ctx.restore": {
+				"desc": "Restore a previously saved context state",
+				"isfunc": true,
+				"name": "ctx.restore",
+				"pNames": [],
+				"pTypes": [],
+				"retval": "",
+				"shortDesc": "Restore saved context"
+			},
+			"ctx.rotate": {
+				"desc": "Rotates the current applied transformation",
+				"isfunc": true,
+				"name": "ctx.rotate",
+				"pNames": ["angle"],
+				"pTypes": ["num_rad"],
+				"retval": "",
+				"shortDesc": "Rotates the transformation matrix"
+			},
+			"ctx.save": {
+				"desc": "Saves the current context state",
+				"isfunc": true,
+				"name": "ctx.save",
+				"pNames": [],
+				"pTypes": [],
+				"retval": "",
+				"shortDesc": "Saves current context"
+			},
+			"ctx.scale": {
+				"desc": "Scales the current applied transformation matrix",
+				"isfunc": true,
+				"name": "ctx.scale",
+				"pNames": ["a", "d"],
+				"pTypes": ["num_frc", "num_frc"],
+				"retval": "",
+				"shortDesc": "Scale the transformation matrix"
+			},
+			"ctx.setTransform": {
+				"desc": "Set the current transformation matrix",
+				"isfunc": true,
+				"name": "ctx.setTransform",
+				"pNames": ["a", "b", "c", "d", "tx", "ty"],
+				"pTypes": ["?", "?", "?", "?", "?", "?"],
+				"retval": "",
+				"shortDesc": "Set current matrix"
+			},
+			"ctx.transform": {
+				"desc": "Apply an other transformation matrix to the current one",
+				"isfunc": true,
+				"name": "ctx.transform",
+				"pNames": ["a", "b", "c", "d", "tx", "ty"],
+				"pTypes": ["num", "num", "num", "num", "num", "num"],
+				"retval": "",
+				"shortDesc": "Transform the current matrix"
+			},
+			"ctx.translate": {
+				"desc": "'Moves' the current applied transformation matrix",
+				"isfunc": true,
+				"name": "ctx.translate",
+				"pNames": ["tx", "ty"],
+				"pTypes": ["num_pxl", "num_pxl"],
+				"retval": "",
+				"shortDesc": "'Move' the transformation matrix"
+			},
+			"ctx.unloadTexture": {
+				"desc": "",
+				"isfunc": true,
+				"name": "ctx.unloadTexture",
+				"pNames": ["image"],
+				"pTypes": ["?"],
+				"retval": "",
+				"shortDesc": ""
+			},
+			"DrawImage": {
+				"desc": "Draws an image to the canvas",
+				"isfunc": true,
+				"name": "DrawImage",
+				"pNames": ["image", "x", "y", "w", "h", "angle"],
+				"pTypes": ["obj-glv Image", "num_frc", "num_frc", "num_frc", "num_frc", "num_deg"],
+				"retval": "",
+				"shortDesc": "Draw image to canvas"
+			},
+			"DrawSprite": {
+				"desc": "Draws a part of an image to the canvas.",
+				"isfunc": true,
+				"name": "DrawSprite",
+				"pNames": ["sheet", "sx", "sy", "sw", "sh", "dx", "dy", "dw", "dh"],
+				"pTypes": ["obj-GLV Image", "num_pxl", "num_pxl", "num_pxl", "num_pxl", "num_frc", "num_frc", "num_frc", "num_frc"],
+				"retval": "",
+				"shortDesc": "Draw part of a sprite to the canvas"
+			},
+			"_Exec": {
+				"desc": "calls _gfx.Exec()",
+				"isfunc": true,
+				"name": "Exec",
+				"pNames": ["p1", "p2", "p3", "p4"],
+				"pTypes": ["?", "?", "?", "?"],
+				"retval": "",
+				"shortDesc": ""
+			},
+			"_Execute": {
+				"desc": "",
+				"isfunc": true,
+				"name": "Execute",
+				"pNames": ["p1", "p2", "p3", "p4"],
+				"pTypes": ["?", "?", "?", "?"],
+				"retval": "",
+				"shortDesc": ""
+			},
+			"Explode": "#1500174100",
+			"Focus": "#7324472769",
+			"GetAbsHeight": "#1197564340",
+			"GetAbsWidth": "#1128215329",
+			"GetContext": {
+				"desc": "Returns the current FastCanvas context",
+				"isfunc": true,
+				"name": "GetContext",
+				"pNames": [],
+				"pTypes": [],
+				"retval": "obj-ctx",
+				"shortDesc": "returns the glv context"
+			},
+			"GetHeight": "#2576212953",
+			"GetLeft": "#1237814406",
+			"GetParent": "#3557841648",
+			"GetPosition": "#1605064214",
+			"GetTop": "#1981028136",
+			"GetType": {
+				"desc": "Returns the control class name.",
+				"isfunc": true,
+				"name": "GetType",
+				"pNames": [],
+				"pTypes": [],
+				"retval": "str-GLView",
+				"shortDesc": "Returns the control class name"
+			},
+			"GetVisibility":"#1672373665",
+			"GetWidth": "#1321469131",
+			"Gone": "#5528553362",
+			"height": {
+				"desc": "height",
+				"isfunc": false,
+				"name": "height",
+				"pNames": [],
+				"pTypes": [],
+				"retval": "num_int",
+				"shortDesc": ""
+			},
+			"Hide": "#5372805812",
+			"IsEnabled": "#1744802827",
+			"IsOverlap": "#1785728721",
+			"IsVisible": "#1814300863",
+			"Method": "#1023663567",
+			"Render": {
+				"desc": "Render all draw commands to the canvas",
+				"isfunc": true,
+				"name": "Render",
+				"pNames": [],
+				"pTypes": [],
+				"retval": "",
+				"shortDesc": "Render draw commands"
+			},
+			"SetBackColor": "#3857861627",
+			"SetBackGradient": "#7112142192",
+			"SetBackGradientRadial": "#1101641465",
+			"SetBackground": "#1239127541",
+			"SetEnabled": "#1602385882",
+			"SetMargins": "#1741900074",
+			"SetOnTouch": "#2088093920",
+			"SetOnTouchDown": "#2938578932",
+			"SetOnTouchMove": "#2039582034",
+			"SetOnTouchUp": "#9861324731",
+			"SetPadding": "#1923105617",
+			"SetPosition": "#1425862386",
+			"SetScale": "#1990464376",
+			"SetSize": "#1296070870",
+			"SetTouchable": "#2562918782",
+			"SetVisibility": "#1004824195",
+			"Show": "#1243391562",
+			"Tween": "#2114624769",
+			"width": {
+				"desc": "width",
+				"isfunc": false,
+				"name": "width",
+				"pNames": [],
+				"pTypes": [],
+				"retval": "num_int",
+				"shortDesc": ""
+			}
+		}
+	},
 	"CreateImage": {
 		"abbrev": "img",
 		"desc": "Image controls can be used to display images such like png, jpg or gif.\nJust pass the file path and your're done.\n%c\nWithout the **width** and **height** dimensions the image will be shown without any scaling.\n<sample Original Size>\nIf you specify one of them and leave the other _null_, _-1_ or blank, it will be scaled so that the aspect ratio is kept.\n<sample Maintain Aspect>\nAnd if you specify both parameters it will be scaled to your wishes.<sample Stretched>\n\nIf you want images to depress like buttons if touched you can use the “Button” **option**.<sample Button>\n\n<h3>Drawing on Images</h3>\nImages are also useful for drawing basic shapes and other images on it and therefore for creating dynamic animations or even basic games. To create an empty image you can pass _null_ as file parameter.\n\nThis way you can also specify a fixed pixel size to the image you can use the “fix” **option** and pass values for the **pxw** and **pxh** parameters.<js>img = app.CreateImage( null, 0.8, 0.5, \"fix\", 20, 20 );\nimg.DrawLine( 0, 0, 1, 1 );</js>\nIf you dislike the anti-alias effect you can apply the “alias” **option** on a higher resolution image and draw a low-resolution image on it:\n<js>img2 = app.CreateImage( null, .8, .5, \"alias\" );\nimg2.DrawImage( img, 0, 0, 1, 1, 0 );</js>\nThere are a whole bunch of drawing methods defined here. Some of the were already used above. You can draw lines, rectangles, circles and other images, just to name a few. You can even draw a transformed image using an [transformation matrix](http://www.it.hiof.no/\\~borres/j3d/math/twod/p-twod.html#ma2d35). Check out the **Draw\\*** methods in the method list below to get more details about all drawing functions.\n<sample Draw Shapes>\n<h3>Drawing on Images _fast_</h3>\nIf you have many draw operations to perform at runtime (ie. for games) you might want to disable the automatic canvas update after each Draw* call using the **SetAutoUpdate** method. To force the rendering now, you have to call **Update**.\n\nAnother way to increase the animation speed is using the _NoDom_ configuration. This will disable html and js Dom elements in your app that consume a lot of resources, but app functions can still be used.\nFor animations you can then use the **Animate** function of the app object which calls a function for a given amount per second. Note that the canvas still needs some time to refresh - so going over 60 fps makes no sense at all.\n<sample Advanced Clock Animating>",
@@ -2482,7 +2796,7 @@
 	},
 	"CreateList": {
 		"abbrev": "lst",
-		"desc": "If you want to display many dataset of the same structure you might consider using the **List** object.\n The List object supports multi-line list items and can show icons. Multi-line items are created by dividing each list item up using the “&colon;” (colon) character. If you need to use a colon character in your item text then use this character sequence: “^c^”.\nYou can have one icon and some body text using the following formats&colon;\n\n“title”\n“title&colon;icon”\n“title&colon;body&colon;icon”\n“title&colon;body&colon;extra&colon;icon”\n\nAlternatively you can use the **AddItem** method which accepts _title_, _body_ and _icon_ as parameters to generically build up your list.\n\nYou can specify your own icon file for example “Img/MyIcon.png”, or one of the special built-in icons using the following key words: “audio”, “photo”, “video”, “folder”, “audiofolder”, “photofolder”, “videofolder” and “playlist”.\n<sample Title + Icon>\n<sample Title + Body>\nYou can use the **SetOnTouch** and **SetOnLongTouch** methods to define a function you want to be called when a list item is selected. The selected item title, body, type and index are passed into your OnTouch callback function as parameters.\n<sample Simple>\nYou can change the look of a List using the **SetBackColor** and **SetTextColor** functions on the list object. You can also set a background image/pattern or background gradient for the List using the **SetBackground** and **SetBackGradient** functions.\n<sample Gray on White>\nYou can also create lists items that look like buttons by using one of the following options: “AlumButton”, “GreenButton”, “OrangeButton”.\n<sample Orange Buttons>\nOr create lists with Gradient backgrounds like this:<sample Gradient Background>",
+		"desc": "If you want to display many dataset of the same structure you might consider using the **List** object.\n The List object supports multi-line list items and can show icons. Multi-line items are created by dividing each list item up using the “&colon;” (colon) character. If you need to use a colon character in your item text then use this character sequence: “^c^”.\nYou can have one icon and some body text using the following formats&colon;\n\n“title”\n“title&colon;icon”\n“title&colon;body&colon;icon”\n\nAlternatively you can use the **AddItem** method which accepts _title_, _body_ and _icon_ as parameters to generically build up your list.\n\nYou can specify your own icon file for example “Img/MyIcon.png”, or one of the special built-in icons using the following key words: “audio”, “photo”, “video”, “folder”, “audiofolder”, “photofolder”, “videofolder” and “playlist”.\n<sample Title + Icon>\n<sample Title + Body>\nYou can use the **SetOnTouch** and **SetOnLongTouch** methods to define a function you want to be called when a list item is selected. The selected item title, body, type and index are passed into your OnTouch callback function as parameters.\n<sample Simple>\nYou can change the look of a List using the **SetBackColor** and **SetTextColor** functions on the list object. You can also set a background image/pattern or background gradient for the List using the **SetBackground** and **SetBackGradient** functions.\n<sample Gray on White>\nYou can also create lists items that look like buttons by using one of the following options: “AlumButton”, “GreenButton”, “OrangeButton”.\n<sample Orange Buttons>\nOr create lists with Gradient backgrounds like this:<sample Gradient Background>",
 		"isfunc": true,
 		"name": "CreateList",
 		"pNames": ["list", "width", "height", "options"],
@@ -3094,7 +3408,7 @@
 	},
 	"CreateMediaStore": {
 		"abbrev": "med",
-		"desc": "The MediaStore is used to query audio information from the android provider or from the device in the /sdcard/Music folder.",
+		"desc": "The MediaStore is used to query audio information from the android provider or from the device in the “/sdcard/Music” folder.",
 		"isfunc": true,
 		"name": "CreateMediaStore",
 		"pNames": [],
@@ -3150,7 +3464,7 @@
 				"isfunc": true,
 				"name": "QueryMedia",
 				"pNames": ["filter", "sort", "options"],
-				"pTypes": ["str_sql", "str:coloumns-title,\\_id,duration,size,uri,album,albumID;artist,artistId", "str-internal|external"],
+				"pTypes": ["str_sql", "str:coloumns-title,\\_id,duration,size,uri,album,albumID,artist,artistId", "str-internal|external"],
 				"shortDesc": "Search for media"
 			},
 			"SetOnAlbumsResult": {
@@ -3917,7 +4231,7 @@
 			"SetOnChange": {
 				"desc": "Define a callback function which is called when a phone state has changed.",
 				"isfunc": true,
-                "name": "SetOnChange",
+				"name": "SetOnChange",
 				"pNames": ["callback"],
 				"pTypes": [
 					{
@@ -3930,7 +4244,7 @@
 					}
 				],
 				"shortDesc": "Called when a phone state has changed"
-            },
+			},
 			"Start": {
 				"desc": "Start listening.",
 				"isfunc": true,
@@ -3984,7 +4298,7 @@
 						"desc": "callback function",
 						"isfunc": true,
 						"name": "callback",
-                        "pNames": ["items"],
+						"pNames": ["items"],
 						"pTypes": ["lst_obj-[{ skuDetailsToken:str&comma; productId:str&comma; type:str&comma; price:str&comma; price_amount_micros:num_int&comma; price_currency_code:str&comma; title:str&comma; description:str }]"],
 						"shortDesc": "callback"
 					},
@@ -4013,8 +4327,7 @@
 						"name": "callback",
 						"pNames": ["prodId", "orderId", "purchToken", "devToken", "packageName"],
 						"pTypes": ["str", "str", "str", "str", "str"],
-						"shortDesc": "callback",
-						"subf": {}
+						"shortDesc": "callback"
 					}, "str-SUBS"],
 				"shortDesc": "Purchase an item on Google Play."
 			}
@@ -4414,11 +4727,11 @@
 		}
 	},
 	"CreateShortcut": {
-		"desc": "This method creates a shortcut of an app on your home screen - referencing to a js file runnable with DS",
+		"desc": "This method creates a shortcut of an app on your home screen - referencing to a js file runnable with DS.\nNote: since Android 9 this method prompts a system dialog",
 		"isfunc": true,
 		"name": "CreateShortcut",
 		"pNames": ["name", "iconFile", "file", "options"],
-		"pTypes": ["str", "str_pth", "str_pth", "str_com"],
+		"pTypes": ["str", "str_pth", "str_pth", "str_com-Portrait|Landscape,Transparent,NoDom,Debug:start app in debug mode,Game:runs in GameView mode|remote"],
 		"shortDesc": "Creates a Home-Screen shortcut to an app"
 	},
 	"CreateSmartWatch": {
@@ -4445,7 +4758,7 @@
 				"name": "CreateImage",
 				"pNames": ["image", "width", "height", "options", "pxwidth", "pxheight"],
 				"pTypes": ["str_pth", "num", "num", "str_com-fix,alias,px:use pixel values for size,Button:causes image to depress like a button when touched,ScaleCenter,async:loads the image asynchronously,FontAwesome,Resize,TouchThrough,Icon:allows loading of app icons,wallpaper,NoPlay:prevent gifs from playing automatically", "num_pxl", "num_pxl"],
-                "retval": "swo-Image",
+				"retval": "swo-Image",
 				"shortDesc": "Returns a new SmartWatch Image"
 			},
 			"CreateLayout": {
@@ -4454,7 +4767,7 @@
 				"name": "CreateLayout",
 				"pNames": ["type", "options"],
 				"pTypes": ["str-Linear|Absolute|Frame", "str_com-TouchThrough,TouchSpy:spies on touch events to all children,Left|Top|Right|Bottom|Center|VCenter,Wrap,Horizontal|Vertical,FillX,FillY,FillXY"],
-                "retval": "swo-Layout",
+				"retval": "swo-Layout",
 				"shortDesc": "Returns a new SmartWatch Layout"
 			},
 			"CreateSensor": {
@@ -4463,7 +4776,7 @@
 				"name": "CreateSensor",
 				"pNames": ["name", "options"],
 				"pTypes": ["str-Accelerometer|MagneticField|Orientation|Light|Proximity|Temperature|GameRotation|GeomagneticRotation|Gravity|Gyroscope|HeartRate|Acceleration|Pressure|Humidity|RotationMotion|StepCounter|StepDetector", "str_com-Slow|Medium|Fast|Fastest"],
-                "retval": "swo-Sensor",
+				"retval": "swo-Sensor",
 				"shortDesc": "Returns a new SmartWatch Sensor"
 			},
 			"CreateText": {
@@ -4472,7 +4785,7 @@
 				"name": "CreateText",
 				"pNames": ["text", "width", "height", "options"],
 				"pTypes": ["str", "num_frc", "num_frc", "str_com-Multiline,Left|Right,Html,Bold,Monospace,AutoSize,NoWrap,Log"],
-                "retval": "swo-Text",
+				"retval": "swo-Text",
 				"shortDesc": "Returns a new SmartWatch Text"
 			},
 			"GetVersion": {
@@ -4922,7 +5235,7 @@
 			"SetOnChange": "#2137502353",
 			"SetOnTouch": {
 				"desc": "Define a callback function that is called when the user touches the control.\n<deprecated Use SetOnChange instead>",
-                "name": "SetOnTouch",
+				"name": "SetOnTouch",
 				"isfunc": true,
 				"pNames": ["callback"],
 				"pTypes": [
@@ -4958,12 +5271,12 @@
 	},
 	"CreateSynth": {
 		"abbrev": "syn",
-		"desc": "Returns a Synth object.",
+		"desc": "Returns a Synth object which ca produces a variety of sounds, sound effects and music.\n%c\n<h3>Some descriptions</h3>\n**note length:** default is 2.56 seconds.\n**midi note&colon;** like n'th key on a keyboard between 0 and ~125. 12 keys are one octave. Ie. the 4'th octave:\n\tC:60,C#:61,D:62,D#:63,E:64,F:65,F#:66,G:67,G#:68,A:69,A#:70,B:71.\n**duration&colon;** powers of two indicating whole, half, quarter etc. up to thirty second notes.\n**frequency&colon;** A4 equals 440 Hz. Each note frequency is 12&radic;2 (~1.06) times higher than the previous.\n\tHumans can hear a range from 10 to about 20,000 Hz. My phone's range is from 0 to about 11025 Hz\n\n**Phaser:** a sound filter which creates a series of peaks and troughs in the frequency spectrum\n**VoltageControlledAmplifier:** (Variable-Gain Amplifier) electronic amplifier that varies its gain\n**Voltage-Controlled Filter:** electronic amplifier that varies the frequency",
 		"isfunc": true,
 		"name": "CreateSynth",
 		"pNames": ["type"],
-		"pTypes": ["?"],
-		"retval": "Synth",
+		"pTypes": ["str-Signal,VCA,VCF"],
+		"retval": "Returns a new Synth object.",
 		"shortDesc": "Returns a new Synth object",
 		"subf": {
 			"GetType": {
@@ -4975,290 +5288,289 @@
 				"retval": "str-Synth",
 				"shortDesc": "Returns the control class name"
 			},
-			"Method": "#1023663567",
 			"PlayMidiTune": {
-				"desc": "",
+				"desc": "Play a comma-separated sequence of “midi_note&colon;duration” pairs.",
 				"isfunc": true,
 				"name": "PlayMidiTune",
 				"pNames": ["tune"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["str_com-note1&colon;duration1&comma;note2&colon;duration2&comma;..."],
+				"shortDesc": "Play a sequence of notes"
 			},
 			"PlayNote": {
-				"desc": "",
+				"desc": "Plays a single note",
 				"isfunc": true,
 				"name": "PlayNote",
 				"pNames": ["note"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["num_int-0..125"],
+				"shortDesc": "Play a single note"
 			},
 			"PlayTone": {
-				"desc": "",
+				"desc": "Plays a frequency tone.",
 				"isfunc": true,
 				"name": "PlayTone",
 				"pNames": ["frequency", "duration"],
-				"pTypes": ["?", "?"],
-				"shortDesc": ""
+				"pTypes": ["num:frequency", "num_mls"],
+				"shortDesc": "Plays a frequency tone"
 			},
 			"SetDelay": {
-				"desc": "",
+				"desc": "Change the delay effect difference",
 				"isfunc": true,
 				"name": "SetDelay",
 				"pNames": ["milliseconds"],
 				"pTypes": ["num_mls"],
-				"shortDesc": ""
+				"shortDesc": "Change delay effect difference"
 			},
 			"SetDelayEnabled": {
-				"desc": "SetDelayEnabled",
+				"desc": "Enables the delay effect (plays every note a second time after a given delay)",
 				"isfunc": true,
 				"name": "SetDelayEnabled",
 				"pNames": ["enable"],
 				"pTypes": ["bin"],
-				"shortDesc": ""
+				"shortDesc": "Enables the delay effect"
 			},
 			"SetFeedback": {
-				"desc": "",
+				"desc": "Adds a feedback effect when delay is enabled",
 				"isfunc": true,
 				"name": "SetFeedback",
 				"pNames": ["feedback"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["num_frc"],
+				"shortDesc": "Adds a delay feedback effect"
 			},
 			"SetFrequency": {
-				"desc": "",
+				"desc": "Set the current played frequency",
 				"isfunc": true,
 				"name": "SetFrequency",
 				"pNames": ["frequency"],
 				"pTypes": ["num"],
-				"shortDesc": ""
+				"shortDesc": "Set current frequency"
 			},
 			"SetNoteLength": {
-				"desc": "",
+				"desc": "Set the length of a whole note in seconds. Defaults to 2.56",
 				"isfunc": true,
 				"name": "SetNoteLength",
 				"pNames": ["duration"],
-				"pTypes": ["num_mls"],
-				"shortDesc": ""
+				"pTypes": ["num_sec"],
+				"shortDesc": "Set whole note length"
 			},
 			"SetPhaser": {
-				"desc": "",
+				"desc": "Initializes the phaser effect",
 				"isfunc": true,
 				"name": "SetPhaser",
 				"pNames": ["drywet", "rate", "range", "feedback"],
-				"pTypes": ["bin", "num", "num", "?"],
-				"shortDesc": ""
+				"pTypes": ["num_frc", "num", "num", "num_frc"],
+				"shortDesc": "Initializes phaser"
 			},
 			"SetPhaserDryWet": {
-				"desc": "",
+				"desc": "Control producing of unprocessed (0) and delayed (1) signals (whatever this means)",
 				"isfunc": true,
 				"name": "SetPhaserDryWet",
 				"pNames": ["drywet"],
-				"pTypes": ["bin"],
-				"shortDesc": ""
+				"pTypes": ["num_frc"],
+				"shortDesc": "Control unprocessed/delayed signals ratio"
 			},
 			"SetPhaserEnabled": {
-				"desc": "SetPhaserEnabled",
+				"desc": "En/Disables phaser effect",
 				"isfunc": true,
 				"name": "SetPhaserEnabled",
 				"pNames": ["enable"],
 				"pTypes": ["bin"],
-				"shortDesc": ""
+				"shortDesc": "En/Disables phaser effect"
 			},
 			"SetPhaserFeedback": {
-				"desc": "",
+				"desc": "Enables phaser feedback",
 				"isfunc": true,
 				"name": "SetPhaserFeedback",
 				"pNames": ["feedback"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["num_frc"],
+				"shortDesc": "Enables phaser feedback"
 			},
 			"SetPhaserRange": {
-				"desc": "",
+				"desc": "Set sweep range",
 				"isfunc": true,
 				"name": "SetPhaserRange",
 				"pNames": ["range"],
 				"pTypes": ["num"],
-				"shortDesc": ""
+				"shortDesc": "Set sweep range"
 			},
 			"SetPhaserRate": {
-				"desc": "",
+				"desc": "Set sweeps per second",
 				"isfunc": true,
 				"name": "SetPhaserRate",
 				"pNames": ["rate"],
 				"pTypes": ["num"],
-				"shortDesc": ""
+				"shortDesc": "Set sweeps per second"
 			},
 			"SetVca": {
-				"desc": "",
+				"desc": "Initializes the VCA",
 				"isfunc": true,
 				"name": "SetVca",
 				"pNames": ["attack", "decay", "sustain", "release"],
-				"pTypes": ["?", "?", "?", "?"],
-				"shortDesc": ""
+				"pTypes": ["num_mls", "num_mls", "num_frc", "num_mls"],
+				"shortDesc": "Initializes the VCA"
 			},
 			"SetVcaAttack": {
-				"desc": "",
+				"desc": "Set a time where the volume should reach a maximum",
 				"isfunc": true,
 				"name": "SetVcaAttack",
 				"pNames": ["attack"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["num_mls"],
+				"shortDesc": "Set a time of maximum volume"
 			},
 			"SetVcaDecay": {
-				"desc": "",
+				"desc": "Controls time in which the volume is lowered to the sustain value",
 				"isfunc": true,
 				"name": "SetVcaDecay",
 				"pNames": ["decay"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["num_mls"],
+				"shortDesc": "Controls time when volume is lowered to sustain"
 			},
 			"SetVcaEnabled": {
-				"desc": "SetVcaEnabled",
+				"desc": "En/Disables VCA effect",
 				"isfunc": true,
 				"name": "SetVcaEnabled",
 				"pNames": ["enable"],
 				"pTypes": ["bin"],
-				"shortDesc": ""
+				"shortDesc": "En/Disables VCA effect"
 			},
 			"SetVcaRelease": {
-				"desc": "",
+				"desc": "Set a time where the volume should reach a minimum",
 				"isfunc": true,
 				"name": "SetVcaRelease",
 				"pNames": ["release"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["num:mls"],
+				"shortDesc": "set a time of minimum volume"
 			},
 			"SetVcaSustain": {
-				"desc": "",
+				"desc": "Set a basis volume",
 				"isfunc": true,
 				"name": "SetVcaSustain",
 				"pNames": ["sustain"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["num_frc"],
+				"shortDesc": "Set a basis volume"
 			},
 			"SetVcf": {
-				"desc": "",
+				"desc": "Initialize the VCF effect",
 				"isfunc": true,
 				"name": "SetVcf",
 				"pNames": ["attack", "decay", "sustain", "release", "cuttoff", "resonance", "depth"],
-				"pTypes": ["?", "?", "?", "?", "?", "?", "?"],
-				"shortDesc": ""
+				"pTypes": ["num_mls", "num_mls", "num_frc", "num_mls", "num:frequency", "num_frc", "num_frc"],
+				"shortDesc": "Initialize the VCF effect"
 			},
 			"SetVcfAttack": {
-				"desc": "",
+				"desc": "Set a time where the frequencies should reach a maximum",
 				"isfunc": true,
 				"name": "SetVcfAttack",
 				"pNames": ["attack"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["num_mls"],
+				"shortDesc": "Set a time of maximum frequencies"
 			},
 			"SetVcfCutoff": {
-				"desc": "",
+				"desc": "Set a maximum frequency which will never be exceeded",
 				"isfunc": true,
 				"name": "SetVcfCutoff",
 				"pNames": ["cuttoff"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["num:frequency"],
+				"shortDesc": "Set a maximum frequency"
 			},
 			"SetVcfDecay": {
-				"desc": "",
+				"desc": "Controls time in which the frequency is lowered to the sustain value.",
 				"isfunc": true,
 				"name": "SetVcfDecay",
 				"pNames": ["decay"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["num_mls"],
+				"shortDesc": "Controls time when frequency is lowered to sustain"
 			},
 			"SetVcfDepth": {
-				"desc": "",
+				"desc": "Set the strength of the Vcf filter",
 				"isfunc": true,
 				"name": "SetVcfDepth",
 				"pNames": ["depth"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["num_frc"],
+				"shortDesc": "Set filter strength"
 			},
 			"SetVcfEnabled": {
-				"desc": "SetVcfEnabled",
+				"desc": "En/Disables VCF effect",
 				"isfunc": true,
 				"name": "SetVcfEnabled",
 				"pNames": ["enable"],
 				"pTypes": ["bin"],
-				"shortDesc": ""
+				"shortDesc": "En/Disables VCF effect"
 			},
 			"SetVcfRelease": {
-				"desc": "",
+				"desc": "Set a time where the volume should reach a minimum",
 				"isfunc": true,
 				"name": "SetVcfRelease",
 				"pNames": ["release"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["num_mls"],
+				"shortDesc": "set a time of minimum frequency"
 			},
 			"SetVcfResonance": {
-				"desc": "",
+				"desc": "Adds a resonance tone",
 				"isfunc": true,
 				"name": "SetVcfResonance",
 				"pNames": ["resonance"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["num_frc"],
+				"shortDesc": "Adds a resonance tone"
 			},
 			"SetVcfSustain": {
-				"desc": "",
+				"desc": "Set a basis frequency",
 				"isfunc": true,
 				"name": "SetVcfSustain",
 				"pNames": ["sustain"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["num_frc"],
+				"shortDesc": "Set a basis frequency"
 			},
 			"SetVolume": {
-				"desc": "",
+				"desc": "Set the overall synthesizer volume",
 				"isfunc": true,
 				"name": "SetVolume",
 				"pNames": ["left", "right"],
-				"pTypes": ["num_prc", "num_prc"],
-				"shortDesc": ""
+				"pTypes": ["num_frc", "num_frc"],
+				"shortDesc": "Set master volume"
 			},
 			"SetWaveShape": {
-				"desc": "",
+				"desc": "Set the wave shape of the synthesizer",
 				"isfunc": true,
 				"name": "SetWaveShape",
 				"pNames": ["shape"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["str-Sin,Saw,Square,White"],
+				"shortDesc": "Set the wave shape"
 			},
 			"Start": {
-				"desc": "",
+				"desc": "Start playing",
 				"isfunc": true,
 				"name": "Start",
 				"pNames": [],
 				"pTypes": [],
-				"shortDesc": ""
+				"shortDesc": "Start playing"
 			},
 			"Stop": {
-				"desc": "",
+				"desc": "Stop playing",
 				"isfunc": true,
 				"name": "Stop",
 				"pNames": [],
 				"pTypes": [],
-				"shortDesc": ""
+				"shortDesc": "Stop playing"
 			}
 		}
 	},
 	"CreateSysProc": {
 		"abbrev": "sys",
-		"desc": "Returns a SysProc object.",
+		"desc": "Creates a SystemProcedure of a command shell (ie&period; “sh”, “su” if <font class=\"xfeatHint\">root</font> or “busybox” if <font class=\"deprHint\">installed</font>) which can be reused throughout the program.",
 		"isfunc": true,
 		"name": "CreateSysProc",
 		"pNames": ["cmd", "env", "dir", "options"],
-		"pTypes": ["str_pip", "str", "str_pth", "str_com-combine:combines stdout and stderr|builder:force use of proc builder"],
+		"pTypes": ["str:program name-sh|su|busybox", "str", "str_pth", "str_com-combine:combines stdout and stderr|builder:force use of proc builder"],
 		"retval": "SysProc",
 		"shortDesc": "Returns a new SysProc object",
 		"subf": {
 			"Err": {
-				"desc": "",
+				"desc": "Read data from stderr",
 				"isfunc": true,
 				"name": "Err",
 				"pNames": ["maxLines", "options"],
-				"pTypes": ["?", "?"],
-				"shortDesc": ""
+				"pTypes": ["num_int", "str_com-nowait:dont wait for input"],
+				"shortDesc": "Read from stderr"
 			},
 			"GetType": {
 				"desc": "Returns the control class name.",
@@ -5270,59 +5582,74 @@
 				"shortDesc": "Returns the control class name"
 			},
 			"In": {
-				"desc": "",
+				"desc": "Read data from stdin",
 				"isfunc": true,
 				"name": "In",
 				"pNames": ["maxLines", "options"],
-				"pTypes": ["?", "?"],
-				"shortDesc": ""
+				"pTypes": ["num_int", "str_com-nowait:dont wait for input"],
+				"shortDesc": "Read from stdin"
 			},
 			"Method": "#1023663567",
 			"Out": {
-				"desc": "",
+				"desc": "Writes a command to stdout. A trailing linebreak will execute it.",
 				"isfunc": true,
 				"name": "Out",
 				"pNames": ["command"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["str"],
+				"shortDesc": "Write to stdout"
 			},
 			"ReadFileAsByte": {
-				"desc": "",
+				"desc": "Returns the first byte of a file.",
 				"isfunc": true,
 				"name": "ReadFileAsByte",
 				"pNames": ["file"],
 				"pTypes": ["str_pth"],
-				"shortDesc": ""
+				"retval": "num_byt",
+				"shortDesc": "Read first byte of a file"
 			},
 			"SetOnError": {
-				"desc": "SetOnError",
+				"desc": "Define a callback function which is called when something was written to stderr",
 				"isfunc": true,
 				"name": "SetOnError",
 				"pNames": ["callback"],
-				"pTypes": ["?"],
-				"shortDesc": "SetOnError"
+				"pTypes": [{
+					"desc": "callback function",
+					"isfunc": true,
+					"name": "callback",
+					"pNames": ["data"],
+					"pTypes": ["str"],
+					"shortDesc": "callback"
+				}],
+				"shortDesc": "called when stderr changed"
 			},
 			"SetOnInput": {
-				"desc": "SetOnInput",
+				"desc": "Define a callback function which is called when something was written to stdout",
 				"isfunc": true,
 				"name": "SetOnInput",
 				"pNames": ["callback"],
-				"pTypes": ["?"],
-				"shortDesc": "SetOnInput"
+				"pTypes": [{
+					"desc": "callback function",
+					"isfunc": true,
+					"name": "callback",
+					"pNames": ["data"],
+					"pTypes": ["str"],
+					"shortDesc": "callback"
+				}],
+				"shortDesc": "called when stdout changed"
 			},
 			"WriteToFile": {
-				"desc": "",
+				"desc": "Write a binary string to a file.",
 				"isfunc": true,
 				"name": "WriteToFile",
 				"pNames": ["file", "data"],
 				"pTypes": ["str_pth", "str"],
-				"shortDesc": ""
+				"shortDesc": "Write binary data to file"
 			}
 		}
 	},
 	"CreateTabs": {
 		"abbrev": "tab",
-		"desc": "Returns a Tabs object.",
+		"desc": "Tabs are useful if you have multiple subsections in your app. The user can then press the title of a tab and the control will automatically switch to the corresponding layout.\n%c\nTo add children to a tab layout you have to retreive it first (because they were already created by the control):\n<js>var layTab1 = tab.GetLayout( \"TabName1\" );</js>\nThen you canuse it as every normal layout:dso-\"CreateLayout\" control",
 		"isfunc": true,
 		"name": "CreateTabs",
 		"pNames": ["list", "width", "height", "options"],
@@ -5330,21 +5657,21 @@
 		"retval": "Tabs",
 		"shortDesc": "Returns a new Tabs object",
 		"subf": {
-			"AddChild": {
-				"desc": "",
+			"_AddChild": {
+				"desc": "Adds a control to the layout.",
 				"isfunc": true,
 				"name": "AddChild",
 				"pNames": ["child", "order"],
-				"pTypes": ["dso", "?"],
-				"shortDesc": ""
+				"pTypes": ["dso", "num_int"],
+				"shortDesc": "Add a control to the layout"
 			},
 			"AdjustColor": "#1794786072",
 			"Animate": {
-				"desc": "",
+				"desc": "Animates the layout. Available animations are Fade, Flip, Slide or Scale.",
 				"isfunc": true,
 				"name": "Animate",
 				"pNames": ["type", "callback", "time"],
-				"pTypes": ["?", {
+				"pTypes": ["str-Flip|FadeIn|FadeOut|CrossFade|SlideFromBottom|SlideFromLeft|SlideFromRight|SlideFromTop|SlideToBottom|SlideToLeft|SlideToRight|SlideToTop|ScaleFromBottom|ScaleFromLeft|ScaleFromRight|ScaleFromTop|ScaleToBottom|ScaleToLeft|ScaleToRight|ScaleToTop", {
 						"desc": "Callback",
 						"isfunc": true,
 						"name": "callback",
@@ -5352,46 +5679,46 @@
 						"pTypes": [],
 						"shortDesc": "callback"
 					}, "num_mls"],
-				"shortDesc": ""
+				"shortDesc": "Animates the layout"
 			},
-			"ChildToFront": {
-				"desc": "",
+			"_ChildToFront": {
+				"desc": "Moves a child in front of all other children.",
 				"isfunc": true,
 				"name": "ChildToFront",
 				"pNames": ["child"],
 				"pTypes": ["dso"],
-				"shortDesc": ""
+				"shortDesc": "Moves a child to the layout front"
 			},
 			"ClearFocus": "#1362225380",
-			"DestroyChild": {
-				"desc": "",
+			"_DestroyChild": {
+				"desc": "Destroys and removes a child from the layout.",
 				"isfunc": true,
 				"name": "DestroyChild",
 				"pNames": ["child"],
 				"pTypes": ["dso"],
-				"shortDesc": ""
+				"shortDesc": "Destroys and removes a child"
 			},
 			"Focus": "#7324472769",
 			"GetAbsHeight": "#1197564340",
 			"GetAbsWidth": "#1128215329",
-			"GetChildOrder": {
-				"desc": "",
+			"_GetChildOrder": {
+				"desc": "Returns the z order of a child.",
 				"isfunc": true,
 				"name": "GetChildOrder",
 				"pNames": ["child"],
 				"pTypes": ["dso"],
-				"retval": "?",
-				"shortDesc": ""
+				"retval": "num_int",
+				"shortDesc": "Returns the z order of a child"
 			},
 			"GetHeight": "#2576212953",
 			"GetLayout": {
-				"desc": "",
+				"desc": "Returns the content layout of a given tab.",
 				"isfunc": true,
 				"name": "GetLayout",
 				"pNames": ["name"],
 				"pTypes": ["str"],
 				"retval": "dso-CreateLayout",
-				"shortDesc": ""
+				"shortDesc": "Get tab content layout"
 			},
 			"GetLeft": "#1237814406",
 			"GetParent": "#3557841648",
@@ -5411,32 +5738,24 @@
 			"Gone": "#5528553362",
 			"Hide": "#5372805812",
 			"IsEnabled": "#1744802827",
-			"IsOverlap": {
-				"desc": "",
-				"isfunc": true,
-				"name": "IsOverlap",
-				"pNames": ["obj", "depth"],
-				"pTypes": ["dso", "?"],
-				"retval": "?",
-				"shortDesc": ""
-			},
+			"IsOverlap": "#1785728721",
 			"IsVisible": "#1814300863",
 			"Method": "#1023663567",
-			"parent": {
-				"desc": "parent",
+			"parent.AddTab": {
+				"desc": "Adds a new tab to the tabs control.",
 				"isfunc": false,
 				"name": "parent",
-				"pNames": [],
-				"pTypes": [],
-				"shortDesc": "parent"
+				"pNames": ["name"],
+				"pTypes": ["str"],
+				"shortDesc": "Add a new tab"
 			},
-			"RemoveChild": {
-				"desc": "",
+			"_RemoveChild": {
+				"desc": "Removes a child from the layout.",
 				"isfunc": true,
 				"name": "RemoveChild",
 				"pNames": ["child"],
 				"pTypes": ["dso"],
-				"shortDesc": ""
+				"shortDesc": "Remove a child from the layout"
 			},
 			"SetBackAlpha": "#1162431318",
 			"SetBackColor": "#3857861627",
@@ -5445,25 +5764,32 @@
 			"SetBackground": "#1239127541",
 			"SetColorFilter": "#1096996086",
 			"SetEnabled": "#1602385882",
-			"SetGravity": {
-				"desc": "",
+			"_SetGravity": {
+				"desc": "Adjust the placing of contained children.",
 				"isfunc": true,
 				"name": "SetGravity",
 				"pNames": ["gravity"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["str-Left,Top,Right,Bottom,VCenter,HCenter,FillX,FillY,FillXY"],
+				"shortDesc": "Adjust the placing of contained children"
 			},
 			"SetMargins": "#1741900074",
 			"SetOnChange": {
-				"desc": "",
+				"desc": "Define a callback function which is called when the tab has been changed by the user.",
 				"isfunc": true,
 				"name": "SetOnChange",
-				"pNames": ["cb"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pNames": ["callback"],
+				"pTypes": [{
+        	        "desc": "callback function",
+        	        "isfunc": true,
+        	        "name": "callback",
+        	        "pNames": ["name"],
+        	        "pTypes": ["str"],
+        	        "shortDesc": "callback"
+                }],
+				"shortDesc": "Called when current tab changed"
 			},
 			"SetOnChildChange": {
-				"desc": "",
+				"desc": "Defines a callback function which is called when the content of a child control has beed changed by the user.",
 				"isfunc": true,
 				"name": "SetOnChildChange",
 				"pNames": ["callback"],
@@ -5472,25 +5798,25 @@
 						"desc": "Callback",
 						"isfunc": true,
 						"name": "callback",
-						"pNames": [],
-						"pTypes": [],
+						"pNames": ["src"],
+						"pTypes": ["dso"],
 						"shortDesc": "callback"
 					}
 				],
-				"shortDesc": ""
+				"shortDesc": "Called when the user changed a control content"
 			},
 			"SetOnLongTouch": "#2735982374",
 			"SetOnTouch": "#2088093920",
 			"SetOnTouchDown": "#2938578932",
 			"SetOnTouchMove": "#2039582034",
 			"SetOnTouchUp": "#9861324731",
-			"SetOrientation": {
-				"desc": "",
+			"_SetOrientation": {
+				"desc": "Change the children orientation.",
 				"isfunc": true,
 				"name": "SetOrientation",
 				"pNames": ["orient"],
-				"pTypes": ["?"],
-				"shortDesc": ""
+				"pTypes": ["str-Horizontal|Vertical"],
+				"shortDesc": "Change the children orientation"
 			},
 			"SetPadding": "#1923105617",
 			"SetPosition": "#1425862386",
@@ -5498,22 +5824,22 @@
 			"SetSize": "#1296070870",
 			"SetTouchable": "#2562918782",
 			"SetTouchThrough": {
-				"desc": "SetTouchThrough",
+				"desc": "Define whether the layout should forward OnTouch events to underlying controls.",
 				"isfunc": true,
 				"name": "SetTouchThrough",
 				"pNames": ["through"],
-				"pTypes": ["?"],
-				"shortDesc": "SetTouchThrough"
+				"pTypes": ["bin"],
+				"shortDesc": "Enable touch event forwarding"
 			},
 			"SetVisibility": "#1004824195",
 			"Show": "#1243391562",
 			"ShowTab": {
-				"desc": "",
+				"desc": "Switch to a given tab name",
 				"isfunc": true,
 				"name": "ShowTab",
 				"pNames": ["name"],
 				"pTypes": ["str"],
-				"shortDesc": ""
+				"shortDesc": "Switch current tab"
 			},
 			"Tween": "#2114624769"
 		}
@@ -5535,50 +5861,50 @@
 			"GetAbsWidth": "#1128215329",
 			"GetHeight": "#2576212953",
 			"GetHtml": {
-				"desc": "return text formatted with html tags",
+				"desc": "Returns the html formatted content.",
 				"isfunc": true,
 				"name": "GetHtml",
 				"pNames": [],
 				"pTypes": [],
 				"retval": "str_htm",
-				"shortDesc": ""
+				"shortDesc": "Return html formatted text"
 			},
 			"GetLeft": "#1237814406",
 			"GetLineCount": {
-				"desc": "GetLineCount",
+				"desc": "Returns the amount of lines in the text even with html formatting",
 				"isfunc": true,
 				"name": "GetLineCount",
 				"pNames": [],
 				"pTypes": [],
 				"retval": "num_int",
-				"shortDesc": ""
+				"shortDesc": "Get amount of text lines"
 			},
 			"GetLineStart": {
-				"desc": "return number of character where a given line starts",
+				"desc": "Returns at which character in the text a certain line begins.",
 				"isfunc": true,
 				"name": "GetLineStart",
 				"pNames": ["line"],
 				"pTypes": ["num_int"],
 				"retval": "num_int",
-				"shortDesc": ""
+				"shortDesc": "Get the start character index of a line"
 			},
 			"GetLineTop": {
-				"desc": "?",
+				"desc": "Returns the top position of a given line on the screen.",
 				"isfunc": true,
 				"name": "GetLineTop",
 				"pNames": ["line"],
 				"pTypes": ["num_int"],
-				"retval": "?",
-				"shortDesc": ""
+				"retval": "num_frc",
+				"shortDesc": "Get line top position on screen"
 			},
 			"GetMaxLines": {
-				"desc": "GetMaxLines",
+				"desc": "Returns the maximum amount of lines the control can hold with the current control and font height",
 				"isfunc": true,
 				"name": "GetMaxLines",
 				"pNames": [],
 				"pTypes": [],
 				"retval": "num_int",
-				"shortDesc": ""
+				"shortDesc": "Get amount of lines fitting in the control"
 			},
 			"GetParent": "#3557841648",
 			"GetPosition": "#1605064214",
@@ -5602,12 +5928,12 @@
 			"IsOverlap": "#1785728721",
 			"IsVisible": "#1814300863",
 			"Log": {
-				"desc": "append text with line break",
+				"desc": "Append a string to the text separated with a line break",
 				"isfunc": true,
 				"name": "Log",
 				"pNames": ["message", "options"],
-				"pTypes": ["?", "?"],
-				"shortDesc": ""
+				"pTypes": ["str", "str_com-Clear:Clears the log before writing,Red|Green|Blue"],
+				"shortDesc": "Append line to the text"
 			},
 			"Method": "#1023663567",
 			"SetBackAlpha": "#1162431318",
@@ -5621,12 +5947,12 @@
 			"SetFontFile": "#0197498372",
 			"SetHtml": "#8753208754",
 			"SetLog": {
-				"desc": "SetLog",
+				"desc": "Define a maximum amount of log lines",
 				"isfunc": true,
 				"name": "SetLog",
 				"pNames": ["maxLines"],
 				"pTypes": ["num_int"],
-				"shortDesc": ""
+				"shortDesc": "Set maximum log length"
 			},
 			"SetMargins": "#1741900074",
 			"SetOnLongTouch": "#2735982374",
@@ -5661,109 +5987,109 @@
 			"AdjustColor": "#1794786072",
 			"ClearFocus": "#1362225380",
 			"ClearHistory": {
-				"desc": "ClearHistory for undo or redo",
+				"desc": "Clears the undo/redo history.",
 				"isfunc": true,
 				"name": "ClearHistory",
 				"pNames": [],
 				"pTypes": [],
-				"shortDesc": ""
+				"shortDesc": "Clear undo/redo history"
 			},
 			"Focus": "#7324472769",
 			"GetAbsHeight": "#1197564340",
 			"GetAbsWidth": "#1128215329",
 			"GetCursorLine": {
-				"desc": "GetCursorLine",
+				"desc": "Returns the current line index where the cursor is located.",
 				"isfunc": true,
 				"name": "GetCursorLine",
 				"pNames": [],
 				"pTypes": [],
 				"retval": "num_int",
-				"shortDesc": ""
+				"shortDesc": "Get the current cursor line index"
 			},
 			"GetCursorPos": {
-				"desc": "GetCursorPos",
+				"desc": "Returns the index of the character where the cursor is currently located.",
 				"isfunc": true,
 				"name": "GetCursorPos",
 				"pNames": [],
 				"pTypes": [],
 				"retval": "num_int",
-				"shortDesc": ""
+				"shortDesc": "Get the cursor position in the text"
 			},
 			"GetHeight": "#2576212953",
 			"GetHtml": {
-				"desc": "returns text formatted with html tags",
+				"desc": "Returns the html formatted content.",
 				"isfunc": true,
 				"name": "GetHtml",
 				"pNames": [],
 				"pTypes": [],
 				"retval": "str_htm",
-				"shortDesc": ""
+				"shortDesc": "Return html formatted text"
 			},
 			"GetLeft": "#1237814406",
 			"GetLineCount": {
-				"desc": "GetLineCount",
+				"desc": "Returns the amount of lines in the text even with html formatting",
 				"isfunc": true,
 				"name": "GetLineCount",
 				"pNames": [],
 				"pTypes": [],
 				"retval": "num_int",
-				"shortDesc": ""
+				"shortDesc": "Get amount of text lines"
 			},
 			"GetLineStart": {
-				"desc": "returns position where given line starts",
+				"desc": "Returns at which character in the text a certain line begins.",
 				"isfunc": true,
 				"name": "GetLineStart",
 				"pNames": ["line"],
 				"pTypes": ["num_int"],
 				"retval": "num_int",
-				"shortDesc": ""
+				"shortDesc": "Get the start character index of a line"
 			},
 			"GetLineTop": {
-				"desc": "",
+				"desc": "Returns the top position of a given line on the screen.",
 				"isfunc": true,
 				"name": "GetLineTop",
 				"pNames": ["line"],
 				"pTypes": ["num_int"],
-				"retval": "?",
-				"shortDesc": ""
+				"retval": "num_frc",
+				"shortDesc": "Get line top position on screen"
 			},
 			"GetMaxLines": {
-				"desc": "GetMaxLines",
+				"desc": "Returns the maximum amount of lines the control can hold with the current control and font height",
 				"isfunc": true,
 				"name": "GetMaxLines",
 				"pNames": [],
 				"pTypes": [],
 				"retval": "num_int",
-				"shortDesc": ""
+				"shortDesc": "Get amount of lines fitting in the control"
 			},
 			"GetParent": "#3557841648",
 			"GetPosition": "#1605064214",
 			"GetSelectedText": {
-				"desc": "GetSelectedText",
+				"desc": "Returns the currently selected text.",
 				"isfunc": true,
 				"name": "GetSelectedText",
 				"pNames": [],
 				"pTypes": [],
 				"retval": "str",
-				"shortDesc": ""
+				"shortDesc": "Get the selected text"
 			},
 			"GetSelectionEnd": {
-				"desc": "GetSelectionEnd",
+				"desc": "Returns the position of where the user selection ends.",
 				"isfunc": true,
 				"name": "GetSelectionEnd",
 				"pNames": [],
 				"pTypes": [],
 				"retval": "num_int",
-				"shortDesc": ""
+				"shortDesc": "Get selection end position"
 			},
 			"GetSelectionStart": {
-				"desc": "GetSelectionStart",
+				"desc": "Returns the position of where the user selection begins.",
 				"isfunc": true,
 				"name": "GetSelectionStart",
 				"pNames": [],
 				"pTypes": [],
 				"retval": "num_int",
-				"shortDesc": ""
+				"shortDesc": "Get selection start position"
 			},
 			"GetText": "#2387569276",
 			"GetTextSize": "#2530918945",
@@ -5782,32 +6108,32 @@
 			"Gone": "#5528553362",
 			"Hide": "#5372805812",
 			"InsertText": {
-				"desc": "",
+				"desc": "Inserts a string at a given position.",
 				"isfunc": true,
 				"name": "InsertText",
-				"pNames": ["text", "start", "end"],
-				"pTypes": ["str", "num_int", "num_int"],
-				"shortDesc": ""
+				"pNames": ["text", "index"],
+				"pTypes": ["str", "num_int"],
+				"shortDesc": "Insert text at a given position"
 			},
 			"IsEnabled": "#1744802827",
 			"IsOverlap": "#1785728721",
 			"IsVisible": "#1814300863",
 			"Method": "#1023663567",
 			"Redo": {
-				"desc": "Redo action",
+				"desc": "Redo an undone action.",
 				"isfunc": true,
 				"name": "Redo",
 				"pNames": [],
 				"pTypes": [],
-				"shortDesc": ""
+				"shortDesc": "Redo an undone action"
 			},
 			"ReplaceText": {
-				"desc": "ReplaceText",
+				"desc": "Replaces a given range in the text with some string.",
 				"isfunc": true,
 				"name": "ReplaceText",
 				"pNames": ["text", "start", "end"],
 				"pTypes": ["str", "num_int", "num_int"],
-				"shortDesc": ""
+				"shortDesc": "Replace a range of the text with a string"
 			},
 			"SetBackAlpha": "#1162431318",
 			"SetBackColor": "#3857861627",
@@ -5816,35 +6142,35 @@
 			"SetBackground": "#1239127541",
 			"SetColorFilter": "#1096996086",
 			"SetCursorColor": {
-				"desc": "SetCursorColor",
+				"desc": "Changes the cursor color.",
 				"isfunc": true,
 				"name": "SetCursorColor",
 				"pNames": ["color"],
 				"pTypes": ["str_col"],
-				"shortDesc": ""
+				"shortDesc": "Change cursor color"
 			},
 			"SetCursorPos": {
-				"desc": "SetCursorPos",
+				"desc": "Change the curernt cursor position.",
 				"isfunc": true,
 				"name": "SetCursorPos",
 				"pNames": ["position"],
 				"pTypes": ["num_int"],
-				"shortDesc": ""
+				"shortDesc": "Change the curernt cursor position"
 			},
 			"SetEnabled": "#1602385882",
 			"SetHint": {
-				"desc": "set grey default text which cannot be edited",
+				"desc": "Set a grey default which is shown when the edit is empty",
 				"isfunc": true,
 				"name": "SetHint",
 				"pNames": ["text"],
 				"pTypes": ["str"],
-				"shortDesc": ""
+				"shortDesc": "Shows a grey default text"
 			},
 			"SetHtml": "#8753208754",
 			"SetMargins": "#1741900074",
 			"SetOnChange": "#2137502353",
 			"SetOnEnter": {
-				"desc": "called when pressedstr-Done key(disables line break enter key)",
+				"desc": "Define a callback function which is called when the user pressed 'Done' or 'Enter' on the keyboard (line can still be inserted via Shift+Enter)",
 				"isfunc": true,
 				"name": "SetOnEnter",
 				"pNames": ["callback"],
@@ -5858,7 +6184,7 @@
 						"shortDesc": "callback"
 					}
 				],
-				"shortDesc": ""
+				"shortDesc": "Called when user pressed 'Done' or 'Enter'"
 			},
 			"SetOnFocus": "#9283752301",
 			"SetSize": "#1296070870",
@@ -5869,12 +6195,12 @@
 			"Show": "#1243391562",
 			"Tween": "#2114624769",
 			"Undo": {
-				"desc": "Undo action",
+				"desc": "Undo an action.",
 				"isfunc": true,
 				"name": "Undo",
 				"pNames": [],
 				"pTypes": [],
-				"shortDesc": ""
+				"shortDesc": "Undo an action"
 			}
 		}
 	},
@@ -7713,7 +8039,7 @@
 		"name": "GetPairedBtDevices",
 		"pNames": [],
 		"pTypes": [],
-		"retval": "lst_obj-{ name:str&comma; address:str }",
+		"retval": "lst_obj-[{ name:str&comma; address:str }]",
 		"shortDesc": "Get list of paired bluetooth devices"
 	},
 	"GetPath": {
@@ -7791,7 +8117,7 @@
 		"name": "GetRunningApps",
 		"pNames": [],
 		"pTypes": [],
-		"retval": "lst_obj-{ user:num_int&comma; pid:num_bin&comma; name:str&comma; foreground:bin }",
+		"retval": "lst_obj-[{ user:num_int&comma; pid:num_bin&comma; name:str&comma; foreground:bin }]",
 		"shortDesc": "Get list of running apps"
 	},
 	"GetRunningServices": {
@@ -7800,7 +8126,7 @@
 		"name": "GetRunningServices",
 		"pNames": [],
 		"pTypes": [],
-		"retval": "lst_obj-{ user:num_int&comma; pid:num_bin&comma; name:str }",
+		"retval": "lst_obj-[{ user:num_int&comma; pid:num_bin&comma; name:str }]",
 		"shortDesc": "Get list of running services"
 	},
 	"GetScreenDensity": {
@@ -8315,8 +8641,7 @@
 				"name": "addTransaction",
 				"pNames": ["t"],
 				"pTypes": ["?"],
-				"shortDesc": "addTransaction",
-				"subf": {}
+				"shortDesc": "addTransaction"
 			},
 			"Close": {
 				"abbrev": "",
@@ -8325,8 +8650,7 @@
 				"name": "Close",
 				"pNames": [],
 				"pTypes": [],
-				"shortDesc": "Close",
-				"subf": {}
+				"shortDesc": "Close"
 			},
 			"close": {
 				"abbrev": "",
@@ -8335,8 +8659,7 @@
 				"name": "close",
 				"pNames": ["success", "error"],
 				"pTypes": ["?", "?"],
-				"shortDesc": "close",
-				"subf": {}
+				"shortDesc": "close"
 			},
 			"databaseFeatures": {
 				"abbrev": "",
@@ -8345,8 +8668,7 @@
 				"name": "databaseFeatures",
 				"pNames": [],
 				"pTypes": [],
-				"shortDesc": "databaseFeatures",
-				"subf": {}
+				"shortDesc": "databaseFeatures"
 			},
 			"dbname": {
 				"abbrev": "",
@@ -8355,8 +8677,7 @@
 				"name": "dbname",
 				"pNames": [],
 				"pTypes": [],
-				"shortDesc": "dbname",
-				"subf": {}
+				"shortDesc": "dbname"
 			},
 			"Delete": {
 				"abbrev": "",
@@ -8365,8 +8686,7 @@
 				"name": "Delete",
 				"pNames": [],
 				"pTypes": [],
-				"shortDesc": "Delete",
-				"subf": {}
+				"shortDesc": "Delete"
 			},
 			"executeSql": {
 				"abbrev": "",
@@ -8375,8 +8695,7 @@
 				"name": "executeSql",
 				"pNames": ["statement", "params", "success", "error"],
 				"pTypes": ["?", "?", "?", "?"],
-				"shortDesc": "executeSql",
-				"subf": {}
+				"shortDesc": "executeSql"
 			},
 			"ExecuteSql": {
 				"abbrev": "",
@@ -8385,8 +8704,7 @@
 				"name": "ExecuteSql",
 				"pNames": ["sql", "params", "success", "error"],
 				"pTypes": ["?", "?", "?", "?"],
-				"shortDesc": "ExecuteSql",
-				"subf": {}
+				"shortDesc": "ExecuteSql"
 			},
 			"GetName": {
 				"abbrev": "",
@@ -8395,8 +8713,7 @@
 				"name": "GetName",
 				"pNames": [],
 				"pTypes": [],
-				"shortDesc": "GetName",
-				"subf": {}
+				"shortDesc": "GetName"
 			},
 			"GetType": {
 				"abbrev": "",
@@ -8405,8 +8722,7 @@
 				"name": "GetType",
 				"pNames": [],
 				"pTypes": [],
-				"shortDesc": "GetType",
-				"subf": {}
+				"shortDesc": "GetType"
 			},
 			"name": {
 				"abbrev": "",
@@ -8415,8 +8731,7 @@
 				"name": "name",
 				"pNames": [],
 				"pTypes": [],
-				"shortDesc": "name",
-				"subf": {}
+				"shortDesc": "name"
 			},
 			"open": {
 				"abbrev": "",
@@ -8425,8 +8740,7 @@
 				"name": "open",
 				"pNames": ["success", "error"],
 				"pTypes": ["?", "?"],
-				"shortDesc": "open",
-				"subf": {}
+				"shortDesc": "open"
 			},
 			"openargs": {
 				"abbrev": "",
@@ -8435,8 +8749,7 @@
 				"name": "openargs",
 				"pNames": [],
 				"pTypes": [],
-				"shortDesc": "openargs",
-				"subf": {}
+				"shortDesc": "openargs"
 			},
 			"openDBs": {
 				"abbrev": "",
@@ -8445,8 +8758,7 @@
 				"name": "openDBs",
 				"pNames": [],
 				"pTypes": [],
-				"shortDesc": "openDBs",
-				"subf": {}
+				"shortDesc": "openDBs"
 			},
 			"openError": {
 				"abbrev": "",
@@ -8455,8 +8767,7 @@
 				"name": "openError",
 				"pNames": ["e"],
 				"pTypes": ["?"],
-				"shortDesc": "openError",
-				"subf": {}
+				"shortDesc": "openError"
 			},
 			"openSuccess": {
 				"abbrev": "",
@@ -8465,8 +8776,7 @@
 				"name": "openSuccess",
 				"pNames": [],
 				"pTypes": [],
-				"shortDesc": "openSuccess",
-				"subf": {}
+				"shortDesc": "openSuccess"
 			},
 			"readTransaction": {
 				"abbrev": "",
@@ -8475,8 +8785,7 @@
 				"name": "readTransaction",
 				"pNames": ["fn", "error", "success"],
 				"pTypes": ["?", "?", "?"],
-				"shortDesc": "ReadTransaction",
-				"subf": {}
+				"shortDesc": "ReadTransaction"
 			},
 			"startNextTransaction": {
 				"abbrev": "",
@@ -8485,8 +8794,7 @@
 				"name": "startNextTransaction",
 				"pNames": [],
 				"pTypes": [],
-				"shortDesc": "startNextTransaction",
-				"subf": {}
+				"shortDesc": "startNextTransaction"
 			},
 			"transaction": {
 				"abbrev": "",
@@ -8495,8 +8803,7 @@
 				"name": "transaction",
 				"pNames": ["fn", "error", "success"],
 				"pTypes": ["?", "?", "?"],
-				"shortDesc": "transaction",
-				"subf": {}
+				"shortDesc": "transaction"
 			}
 		}
 	},
@@ -9227,7 +9534,7 @@
 		"isfunc": true,
 		"name": "StartApp",
 		"pNames": ["file", "options", "intent"],
-		"pTypes": ["str_pth", "str_com-Debug:start app in debug mode|remote", "str-{ action:str&comma; type:str&comma; data:obj&comma; extras:obj }"],
+		"pTypes": ["str_pth", "str_com-Portrait|Landscape,Transparent,NoDom,Debug:start app in debug mode,Game:runs in GameView mode|remote", "str-{ action:str&comma; type:str&comma; data:obj&comma; extras:obj }"],
 		"shortDesc": "Starts an app in a new window"
 	},
 	"StartDebugServer": {
@@ -9271,11 +9578,11 @@
 		"shortDesc": "Stops a running app service"
 	},
 	"SysExec": {
-		"desc": "Executes a shell command on the android shell. **NOTE:** You have to add a '<pre>exit</pre>' command at the end of your script because the shell does not terminate automatically after finishing.\n\nSee Also: @ExtExec",
+		"desc": "Executes a shell command on the android shell. **NOTE:** You have to add a '`exit`' command at the end of your script because the shell does not terminate automatically after finishing.\n\nSee Also: @ExtExec",
 		"isfunc": true,
 		"name": "SysExec",
 		"pNames": ["command", "options", "maxRead", "timeout"],
-		"pTypes": ["str", "str-log:logs output to console,sh|su", "num", "num_sec"],
+		"pTypes": ["str", "str-log:logs output to console,noread:dont read result (just execute),sh|su", "num", "num_sec"],
 		"retval": "str",
 		"shortDesc": "Execute a shell command on the android shell"
 	},

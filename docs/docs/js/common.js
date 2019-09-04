@@ -185,10 +185,18 @@ function getTheme() {
 }
 
 // app.ShowPopup equivalent for browsers 
-function ShowPopup(msg){
-	var pop = $("#appPopup");
-	if(pop.is(":visible")) pop.stop().fadeOut(100, function() { pop.text(msg); });
-	else pop.text(msg);
-	pop.fadeIn(200).delay(1500).fadeOut(200);
+function ShowPopup(msg) {
+	var apop = $("#appPopup");
+	// .animate() works as cancelable delay
+	apop.stop(true).fadeOut(100, function() { apop.text(msg); })
+	    .fadeIn(200).animate({opacity:1}, 1500).fadeOut(400);
+}
+
+function switchPopup(old, newId) {
+    $(old.parentNode).one({
+        popupafterclose: function() {
+            $(newId).popup("open", {transition: "pop"});
+        }
+    }).popup("close");
 }
 
