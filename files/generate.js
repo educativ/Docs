@@ -48,7 +48,7 @@ function generateDocs() {
 	}
 
 	app.SetDebug("all");
-	if( tchd ) saveFunctions();
+	//if( tchd ) saveFunctions();
 
 	//app.WriteFile( path + `lastfuncs${getl()}.json`, tos(functions) );
 	app.WriteFile( path + "info.json", tos(info) );
@@ -67,10 +67,18 @@ function generateIntros() {
 
 	for(var name of app.ListFolder("intros").sort(sortAsc)) {
 		var s = app.ReadFile(path + `intros${getl()}/` + name);
-
-		name = name.replace(/.txt$/, "");
+		var samples = {}, sampcnt = 0;
+		
+		name = name.replace(/.md$/, "");
 		curDoc = `docs${getl()}/intro/${name}.htm`;
 		nav += newNaviItem(`intro/${name}.htm`, name );
+		
+		s = s.replace(/(\s|<br>)*<sample (.*?)>([^]*?)<\/sample \2>/g,
+		    function(m, _, t, c)
+		    {
+		        samples[t] = toHtmlSamp(c, t, ++sampcnt).replace(/\n\t\t\t/g, "\n\t\t");
+		        return `<sample ${t}>`;
+	        });
 
 		var html = ("<p>" + replaceTypes(addMarkdown(replW(s)))
 			// exclude <h> tags from <p>
@@ -79,29 +87,36 @@ function generateIntros() {
 				"</p>\n\t\t$3\n\t\t<p>")
 			// replace <js> and <bash> tags with sample
 			.replace(
-				/(\s|<br>)*<(js|bash|smp)>\s*([^]*?)\s*<\/\2>(\s|<br>)*/g, (m, _, lang, code) =>
-					`</p>\n${funcBase //(has(code, "\n") ? funcBase : "\t\t" + funcBase.replace(/\n|\t/g, ""))
-						.replace("%s", Prism.languages[lang] ?
-							Prism.highlight(
-								code.replace(/<br>/g, "\n").replace(/&#160;/g, "§s§"),
-								Prism.languages[lang], lang
-							).replace(/§s§/g, "&#160;").replace(/\n/g, "<br>")
-							: code
-						)}\t\t<p>`)
-			// format html code on linebreaks
-			.replace(/\s*<br>\s*/g, "<br>\n\t\t")
-			.replace( /(“.*?”)/g, "<font class='docstring'>$1</font>")
+		        /(\s|<br>)*<(js|bash|smp)( nobox)?>(\s|<br>)*([^]*?)(\s|<br>)*<\/\2>(\s|<br>)*/g, 
+			    function(m, w1, lang, nobox, _, code, _, w2)
+			    {
+			        if(Prism.languages[lang])
+			            code = Prism.highlight(
+						    code.replace(/<br>/g, "").replace(/&#160;/g, "§s§"),
+						    Prism.languages[lang], lang
+					    ).replace(/§s§/g, "&#160;").replace(/\n/g, "<br>\n");
+			        
+				    if(nobox) return `${w1||''}${code}${w2||''}`;
+				    else if(has(code, "<br>")) return `</p>\n${funcBase.replace("%s", code)}\t\t\t<p>`
+				    else return `${w1||''}<code class="samp">${code}</code>${w2||''}`;
+			    })
 			+ "</p>")
-			// additional notes
+			// format html code on linebreaks
+		    .replace(/\s*<br>\s*/g, "<br>\n\t\t")
+		    .replace(/(<\/?(t([rdh]|head|body|able))[^>]*>)<br>/g, "$1")
+		    // additional notes
 			.replace(/<(premium|deprecated|xfeature)(.*?)>/g, (m, n, a) => eval(n + "Hint").replace("%s", a))
-			// some html char placeholders
+			// expandable samples (per <sample name> tag or add to desc)
+		    .replace(/<sample (.*?)>/g, (m, t) => `</p>\n\t\t\t${samples[t]}<p>`)
+		    .replace( /(“.*?”)/g, "<font class='docstring'>$1</font>")
+		    // some html char placeholders
 			.replace(/&(.+?);/g, (m, v) => _htm[v] || m)
 			// remove leading whitespace in <p> tag
 			.replace(/<p>(<br>\s+)+/g, "<p>")
 			// remove empty <p> tags
 			.replace(/\n?\t*<p><\/p>/g, "")
 			// remove trailing whitespace
-			.replace(/[ \t]+\n/g, "\n");;
+			.replace(/[ \t]+\n/g, "\n");
 
 		app.WriteFile(path + `docs/intro/${name}.htm`, introBase
 			.replace(/%t/g, name).replace("%c", html));
@@ -135,7 +150,6 @@ function generateNavigators() {
 				naviBase.replace( 'data-filter="false"', 'data-filter="true"' ))
 			.replace( "%l", list )
 			.replace( /%t/g, cat )
-			// .replace( "%n", JSON.stringify(navs) )
 		);
 	};
 
@@ -208,10 +222,6 @@ function getDocData( f, useAppPop ) {
 	if( !f.shortDesc ) f.shortDesc = f.name;
 	f.shortDesc = f.shortDesc.charAt(0).toUpperCase() +
 		f.shortDesc.slice(1, f.shortDesc.endsWith('.') ? -1 : undefined );
-
-	if( !f.desc ) f.desc = f.shortDesc;
-	f.desc = f.desc.trim();
-	f.desc = f.desc.charAt(0).toUpperCase() + f.desc.slice(1);
 
 	// abbrev for controls
 	if( isControl(f.name) && !f.abbrev )
@@ -301,36 +311,57 @@ function getDocData( f, useAppPop ) {
 function getDesc(name)
 {
 	var desc = functions[name].desc.trim();
-	var samples = getSamples(name);
+	if(desc.startsWith("#"))
+	{
+	    if(app.FileExists(path + `functions/${desc.slice(1)}`))
+	        desc = app.ReadFile(path + `functions/${desc.slice(1)}`).trim();
+        else
+            Throw(new Error(`description file ${desc.slice(1)} linked but doesn't exist.`));
+    }
+	desc = desc.charAt(0).toUpperCase() + desc.slice(1);
+	
+	var samples = getSamples(name), s;
+	var sampcnt = Object.keys(samples).length;
 	if(!has(desc, '.')) desc += '.';
+	
+	desc = desc.replace(/(\s|<br>)*<sample (.*?)>([^]*?)<\/sample \2>/g,
+	    function(m, _, t, c)
+	    {
+	        samples[t] = toHtmlSamp(c, t, ++sampcnt);
+	        return `<sample ${t}>`;
+        });
 
 	return "<p>" + replaceTypes(addMarkdown(replW( desc )))
-		// exclude <h> tags from <p>
+		// exclude <h> and <table> tags from <p>
 		.replace(
-			/(<\/?p>)?(\s|<br>)*(<(h\d?)>.*?<\/\4>)(\s|<br>)*(<\/?p>)?/g,
+			/(<\/?p>)?(\s|<br>)*(<(h\d?|table)>.*?<\/\4>)(\s|<br>)*(<\/?p>)?/g,
 			"</p>\n\t\t\t$3\n\t\t\t<p>")
 		// replace %c with constructor if existent, otherwise insert after first dot
 		.replace(
 			/((?=.*\%c)\.?(\s|<br>)*\%c|((?!.*\%c)\.)(\s|<br>|$)+)/,
 			`.</p>\n${funcBase}\t\t\t<p>`)
+	    // format html code on linebreaks
+		.replace(/\s*<br>\s*/g, "<br>\n\t\t\t")
+		.replace(/(<\/?(t([rdh]|head|body|able))[^>]*>)<br>/g, "$1")
 		// replace <js> and <bash> tags with sample
 		.replace(
-			/(\s|<br>)*<(js|bash|smp)>\s*([^]*?)\s*<\/\2>(\s|<br>)*/g, (m, _, lang, code) =>
-				`</p>\n${funcBase //(has(code, "\n") ? funcBase : "\t\t\t" + funcBase.replace(/\n|\t/g, ""))
-					.replace("%s", Prism.languages[lang] ?
-						Prism.highlight(
-							code.replace(/<br>/g, "\n").replace(/&#160;/g, "§s§"),
-							Prism.languages[lang], lang
-						).replace(/§s§/g, "&#160;").replace(/\n/g, "<br>")
-						: code
-					)}\t\t\t<p>`)
-		// format html code on linebreaks
-		.replace(/\s*<br>\s*/g, "<br>\n\t\t\t")
+		    /(\s|<br>)*<(js|bash|smp)( nobox)?>(\s|<br>)*([^]*?)(\s|<br>)*<\/\2>(\s|<br>)*/g, 
+			function(m, w1, lang, nobox, _, code, _, w2)
+			{
+			    if(Prism.languages[lang])
+			        code = Prism.highlight(
+						code.replace(/<br>/g, "").replace(/&#160;/g, "§s§"),
+						Prism.languages[lang], lang
+					).replace(/§s§/g, "&#160;").replace(/\n/g, "<br>\n");
+			    
+				if(nobox) return `${w1||''}${code}${w2||''}`;
+				else if(has(code, "<br>")) return `</p>\n${funcBase.replace("%s", code)}\t\t\t<p>`
+				else return `${w1||''}<code class="samp">${code}</code>${w2||''}`;
+			})
 		// expandable samples (per <sample name> tag or add to desc)
-		.replace(/(\s|<br>)*<sample (.*?)>/g, (m, _, n) =>
-			(s = samples[n] || Throw(Error(`sample ${n} not found for ${name}`)),
-				delete samples[n], `</p>\n\t\t\t${s}<p>`) // <- actual returned value
-		)
+		.replace(/<sample (.*?)>/g, (m, t) => (s = samples[t]) ?
+		    (delete samples[t], `</p>\n\t\t\t${s}<p>`) :
+		    Throw(Error(`sample ${t} not found for ${name}`)))
 		.replace( /(“.*?”)/g, "<font class='docstring'>$1</font>")
 		+ "</p>" + Object.values(samples).concat("").reduce((a, b) => a + b);
 }
@@ -338,19 +369,11 @@ function getDesc(name)
 // read and return html converted example snippets file
 function getSamples( name )
 {
-	var i, s, samples = {}, samp = ReadFile( path + `samples/${name}.txt`, " " );
-
-	// replace special html characters and convert to list
-	samp = samp.split( "</sample>" ).slice( 0 , -1 );
-
-	// convert samples to required html format
-	for( var i in samp )
-	{
-		s = samp[i].trim();
-		var p = s.indexOf( '>' ),
-			title = s.slice( 8, p );
-		samples[title] = toHtmlSamp( s.slice( p + 1 ), title, i );
-	}
+	var sampcnt = 0, samples = {}, s = ReadFile( path + `samples/${name}.txt`, " ", true );
+	
+	s.replace(/<sample (.*?)>([^]*?)<\/sample>/g,
+	    (m, t, c) => samples[t] = toHtmlSamp(c, t, ++sampcnt));
+	
 	return samples;
 }
 
@@ -360,8 +383,8 @@ function toHtmlSamp( c, t, n )
 	var hasBold = has(c, "<b>") && c.indexOf("</b>") > c.indexOf("<b>");
 	if(!hasBold) Warn(`${curDoc} sample "${t}" has no bold area\n`);
 
-	c = c.replace( /<\/?b>/g, "§b§");
-	c = Prism.highlight(c.trim(), Prism.languages.javascript, 'javascript')
+	c = c.trim().replace( /<\/?b>/g, "§b§");
+	c = Prism.highlight(c, Prism.languages.javascript, 'javascript')
 		.replace( /\t/g, "    " )
 		.replace( /    /g, "&#160;&#160;&#160;&#160;" )
 		.replace( /\n/g, "<br>\n\t\t\t\t\t" )
@@ -649,25 +672,33 @@ function replaceTypes(s, useAppPop)
 function addMarkdown(s) {
 	return s
 		// links
-		.replace(/([^\\]|^)\[(.*?)\]\((.*?)\)/g, function(match, white, name, url)
-		{
+		.replace(/([^\\]|^)\[([^\]}]*)\]\((.*?)\)/g, function(match, white, name, url)
+	    {
 			// exists in docs folder? direct link : open in external app
 			return white + (!url.startsWith("http") &&
-				app.FileExists(path + "docs/app/" + url.slice(url.lastIndexOf("/") + 1)) ?
+				(app.FileExists(path + "docs/" + url.replace("../", "")) ||
+				app.FileExists(path + "docs/app/" + url.replace("../", ""))) ?
 				`<a href="${url}" data-ajax="false">` :
-				`<a href="#" onclick="(isAndroid?app.OpenUrl:window.open)(\'${url}\');">`)
+				`<a href="${url}" onclick="return OpenUrl(this.href);">`)
 				+ `${name||url}</a>`;
-			}
-		)
+		})
+		// link + onclick
+		.replace(/([^\\]|^)\[([^\]}]*)\]{(.*?)}/g, function(match, white, name, script)
+		{
+		    script = script.replace(/"/g, "&quot;").replace(/([*_`~])/g, "\\$1");
+		    return white + `<a href="#" onclick="${script}">${name}</a>`;
+	    })
+		.replace(/(<br>|^)(#+) ([^<]*)/g, (_, white, h, title) =>         // ## headline
+		    white + `<h${h.length}>${title}</h${h.length}>`)
 		.replace(/([^\\]|^)\*\*([^]*?[^\\])\*\*/g, "$1<b>$2</b>")   // **bold**
 		.replace(/([^\\]|^)__([^]*?)__/g, "$1<u>$2</u>")            // __underlined__
 		.replace(/([^\\]|^)\*([^]*?[^\\])\*/g, "$1<i>$2</i>")       // *italic*
 		.replace(/([^\\]|^)_([^]*?[^\\])_/g, "$1<i>$2</i>")         // _italic_
-		.replace(/([^\\]|^)`([^]*?[^\\])`/g, "$1<kbd>$2</kbd>")   // `monospace`
+		.replace(/([^\\]|^)`([^]*?[^\\])`/g, "$1<kbd>$2</kbd>")     // `monospace`
 		//.replace(/([^\\]|^)```([^]*?[^\\])```/g, "$1<kbd>$2</kbd>")   // `monospace`
 		.replace(/([^\\]|^)~~([^]*?[^\\])~~/g, "$1<s>$2</s>")       // ~~strikethrough~~
-		.replace(/([^\\]|^)@([a-z]+?)\b/gi, '$1<a href="$2.htm" data-ajax="false">$2</a>') // @DocReference
-		.replace(/\\([_*~@])/g, "$1");                             // consume \ escaped markdown
+		.replace(/([^\\]|^)@(([^\/\n<>, ]+\/)*([a-z]+?))\b/gi, '$1<a href="$2.htm" data-ajax="false">$4</a>') // @DocReference
+		.replace(/\\([_*~@])/g, "$1");                              // consume \ escaped markdown
 }
 	// convert int to 3-digit hex
 function hex(v) { return ("00" + v.toString(16)).replace(/^0+(...)/, "$1"); }
@@ -776,7 +807,7 @@ var		// subfunctions
 		<div data-role="header" data-position="fixed">
 			<a href="#" class="ui-btn-left" data-icon="arrow-l" onclick="history.back(); return false">Back</a>
 			<h1>%t</h1>
-			<a href="#" class="ui-btn-right" data-icon="gear" data-iconpos="notext" onclick="setTheme(getTheme() == 'default' ? 'dark' : 'default')"></a>
+			<a class="ui-btn-right" data-icon="gear" data-iconpos="notext" onclick="setTheme(getTheme() == 'default' ? 'dark' : 'default')"></a>
 		</div><!-- /header -->
 
 		<div data-role="content">
@@ -816,7 +847,7 @@ var		// subfunctions
 		<div data-role="header" data-position="fixed">
 			<a href='#' class='ui-btn-left' data-icon='arrow-l' onclick="history.back(); return false">Back</a>
 			<h1>%t</h1>
-			<a href="#" class="ui-btn-right" data-icon="gear" data-iconpos="notext" onclick="setTheme(getTheme() == 'default' ? 'dark' : 'default')"></a>
+			<a class="ui-btn-right" data-icon="gear" data-iconpos="notext" onclick="setTheme(getTheme() == 'default' ? 'dark' : 'default')"></a>
 		</div>
 
 		<div style="position:fixed; top:40px; width:100%; text-align:center; z-index:1101;">
@@ -862,7 +893,7 @@ var		// subfunctions
 	<div data-role="header">
 		<a href='#' class='ui-btn-left' data-icon='arrow-l' onclick="history.back(); return false">Back</a>
 		<h1>%t</h1>
-		<a href="#" class="ui-btn-right" data-icon="gear" data-iconpos="notext" onclick="setTheme(getTheme() == 'default' ? 'dark' : 'default')"></a>
+		<a class="ui-btn-right" data-icon="gear" data-iconpos="notext" onclick="setTheme(getTheme() == 'default' ? 'dark' : 'default')"></a>
 	</div><!-- /header -->
 
 	<div data-role="content">
@@ -996,9 +1027,9 @@ function isControl(name) {
 		!!functions[name].subf);  //! for debug, :false
 }
 
-function ReadFile(path, dflt) {
+function ReadFile(path, dflt, write) {
 	if(app.FileExists(path)) return app.ReadFile(path);
-	else app.WriteFile(path, dflt);
+	else if(write) app.WriteFile(path, dflt);
 	return dflt;
 }
 
@@ -1053,9 +1084,9 @@ function saveCategories() {
 
 function OnStart() {
 
-	functions = JSON.parse(ReadFile(path + `functions${getl()}.json`, "{}"));
-	basefuncs = JSON.parse(ReadFile(path + `basefuncs${getl()}.json`, "{}"));
-	categories = JSON.parse(ReadFile(path + `categories${getl()}.json`, "{}"));
+	functions = JSON.parse(ReadFile(path + `functions${getl()}.json`, "{}", true));
+	basefuncs = JSON.parse(ReadFile(path + `basefuncs${getl()}.json`, "{}", true));
+	categories = JSON.parse(ReadFile(path + `categories${getl()}.json`, "{}", true));
 
 	categories.All = [];
 	categories.All = keys(functions);
@@ -1077,9 +1108,8 @@ function OnStart() {
 		throw e;
 	}
 
-	var vn = 0, v = 1000 * (Date.now() / 2592e6 | 0);
-	if(app.FileExists("../docs/version.txt"))
-		vn = Number(app.ReadFile("../docs/version.txt")) % 1000 + 1;
+	var v = 1000 * (Date.now() / 2592e6 | 0);
+	var vn = Number(app.ReadFile("../docs/version.txt", 0)) % 1000 + 1;
 	app.WriteFile("version.txt", v + vn);
 }
 
