@@ -186,21 +186,31 @@ function adjustDoc(html, name) {
 		.replace(/<(red|greed|blue|grey)>(.*?)<\/\1>/g, '<$1>$2</$1>')
 		// some html char placeholders
 		.replace(/&(.+?);/g, (m, v) => _htm[v] || m)
+		// text indentation
+		.replace(/(\n\t+(    )+)([^]*?)<br>/g, (m, w, _, t) => 
+			`${w}<span style="display:inline-block">${t}</span><br>`)
 		// replace <js> and <bash> tags with sample
 		.replace(
-			/(\s|<br>)*<(js|bash|smp)( nobox)?>(\s|<br>)*([^]*?)(\s|<br>)*<\/\2>((\s|<br>)*)/g,
-			function(m, w1, lang, nobox, _, code, _, w2, _)
+			/(\s|<br>)*<(js|bash|smp|java)\b(( |nobox|noinl)*)>(\s|<br>)*([^]*?)(\s|<br>)*<\/\2>((\s|<br>)*)/g,
+			function(m, w1, lang, options, _, _, code, _, w2, _)
 			{
-			    if(w1) w1 = m.slice(0, m.indexOf(`<${lang}>`));
-				if(Prism.languages[lang])
-					code = Prism.highlight(
-						code.replace(/<br>/g, "").replace(/&#160;/g, "§s§"),
-						Prism.languages[lang], lang
-					).replace(/§s§/g, "&#160;").replace(/\n/g, "<br>\n");
+				options = options.split(" ");
+			    if(w1) w1 = m.slice(0, m.indexOf(`<${lang}`));
+				if(Prism.languages[lang]) {
+					var tags = [];
+					code = code
+						.replace(/<br>/g, "")
+						.replace(/&#160;/g, "§s§")
+						.replace(/\s*<.*?>/g, (m) => (tags.push(m), "§t§"));
+					code = Prism.highlight( code, Prism.languages[lang], lang )
+						.replace(/\n/g, "<br>\n")
+						.replace(/§t§/g, () => tags.shift())
+						.replace(/§s§/g, "&#160;");
+				}
 
-				if(nobox) return `${w1||''}${code}${w2||''}`;
-				else if(has(code, "<br>")) return `</p>\n${newCode(code)}\t\t<p>`
-				else return `${w1||''}<code class="samp samp-inline">${code}</code>${w2||''}`;
+				if(has(options, "nobox")) return `${w1||''}${code}${w2||''}`;
+				else if(has(code, "<br>") || has(options, "noinl")) return `</p>\n${newCode(code)}\t\t<p>`
+				else return `${w1||''}<div class="samp samp-inline">${code}</div>${w2||''}`;
 			})
 		// remove leading whitespace in <p> tag
 		.replace(/<p>(<br>|\s+)+/g, "<p>")
@@ -209,8 +219,10 @@ function adjustDoc(html, name) {
 		// remove empty <p> tags
 		.replace(/\n?\t*<p><\/p>/g, "")
 		// remove special whitespace from tables
-		.replace(/([\n\t\xa0]+)(<\/?t([rhd]|head|body|able))/g,
-			(m, w, t) => w.replace(/\t/g, "    ").replace(/\xa0/g, ' ') + t)
+		.replace(/([\n\t ]+)(<\/?t([rhd]|head|body|able))/g,
+			(m, w, t) => w.replace(/\t/g, "    ").replace(/ /g, ' ') + t)
+		// remove escaped linebreaks
+		.replace(/\\<br>/g, "")
 		// remove trailing <br> tags from table
 		.replace(/(<\/?(t([rdh]|head|body|able))[^>]*>)<br>/g, "$1")
 		// indent line breaks
@@ -455,10 +467,11 @@ function typeDesc( types )
 					case "lst":
 					case "obj": return s[i] + replaceTypes( type[2], false );
 					case "dso":
-						if(!curDoc.endsWith(type[2] + ".htm") && !functions[type[2]])
+						var func = type[2].replace(/[^/]*\//g, "");
+						if(!curDoc.endsWith(type[2] + ".htm") && !functions[func])
 							Throw(Error(`link to unexistent file ${type[2]}.htm`))
 						if(functions[type[2]])
-							return s[i] + newLink(type[2] + ".htm", type[2].replace(regConPrefix, ""));
+							return s[i] + newLink(type[2] + ".htm", func.replace(regConPrefix, ""));
 						else
 							return s[i] + type[2];
 					default: Throw(Error("unknown type " + type[1]));
@@ -541,9 +554,10 @@ function toArgPop( name, types, doSwitch ) {
 				case "lst":
 				case "obj": return s[i] + replaceTypes( replW(type[2]), true );
 				case "dso":
-					if(!curDoc.endsWith(type[2] + ".htm") && !functions[type[2]])
+					var func = type[2].replace(/[^/]*\//g, "");
+					if(!curDoc.endsWith(type[2] + ".htm") && !functions[func])
 						Throw(Error(`link to unexistent file ${type[2]}.htm`))
-					return s[i] + newLink(type[2] + ".htm", type[2].replace(regConPrefix, ""));
+					return s[i] + newLink(type[2] + ".htm", func.replace(regConPrefix, ""));
 				default: Throw(Error("unknown type " + type[1]));
 			}
 		}
@@ -622,19 +636,20 @@ function incpop( type, i )
 	return hex(Globals.spop[type]);
 }
 
-// accept formats: 'name:"desc"' 'name:type' 'name:"type-values"'
+// accept formats: 'name:"desc"' 'name:type' 'name:"types"' 'name:"type-values"'
 function replaceTypes(s, useAppPop)
 {
-	var _s = s.replace(/<(style|a).*?>.*<\/\1>|style=[^>]*/g, '');
+	var _s = s.replace(/<(style|a)\b.*?>.*?<\/\1>|style=[^>]*/g, '');
 	_s.replace(/\b([\w_.#-]+):([a-z]{3}(_[a-z]{3})?\b)?-?("[^"]*| ?\w[^.|:,”}\]\n]*)?"?/g,
 		function(m, name, type, _, desc)
 		{
 			var r, space = '';
-			if( !type && !desc || name.startsWith("Note")) return;
-
+			if( !type && (!desc || desc.startsWith(' ')) || name.startsWith("Note")) return;
+			
 			if(desc) {
 				if(desc.endsWith(' ')) space = ' ';
 				desc = desc.slice(desc.startsWith('"'), space ? -1 : undefined);
+				if(typenames[desc.slice(0, 3)] && !desc[4].match(/[a-z]/i)) type = desc, desc = '';
 			}
 
 			if( type )
@@ -651,8 +666,12 @@ function replaceTypes(s, useAppPop)
 				else r = newAppPopup(name, type ? typenames[type.slice(0, 3)] +
 						(typedesc[type] ? ": " + typedesc[type] : "") : desc);
 			}
-			else
-				r = type ? toArgPop(name, type) : newAppPopup(name, desc);
+			else if(type) r = toArgPop(name, type);
+			else {
+				tryAddType( newDefPopup( "dsc_" + incpop( "dsc", 1 ),
+					desc.replace( /(“.*?”)/g, "<docstr>$1</docstr>" )));
+				r = newTxtPopup( "dsc_" + incpop( "dsc" ), name );
+			}
 
 			s = s.replace(m, r + space);
 			return '';
@@ -756,7 +775,7 @@ var		// subfunctions
 		// popup object
 	defPopup = '<div data-role="popup" id="pop_%s" class="ui-content">%s</div>',
 		// subfunctions list
-	subfHead = `<p><br>The following methods are available on the <b>%t</b> object:</p>\n\n%f`,
+	subfHead = `<h3>Methods</h3>\n\t\t<p><br>The following methods are available on the <b>%t</b> object:</p>\n\n%f`,
 
 		// deprecated note
 	deprecatedHint = "<div class='deprHint'><b>Note: This function is deprecated.%s</b></div>";
@@ -866,6 +885,10 @@ ${getHead(1)}
 		<a class="ui-btn-right" data-icon="gear" data-iconpos="notext" onclick="setTheme(getTheme() == 'default' ? 'dark' : 'default')"></a>
 	</div><!-- /header -->
 
+	<div style="position:fixed; top:40px; width:100%; text-align:center; z-index:1101;">
+		<div id="appPopup" class="androidPopup">Hello World</div>
+	</div>
+
 	<div data-role="content">
 		%c
 	</div><!-- /content -->
@@ -964,7 +987,7 @@ var
 		// interpret matching app. functions as control constructors
 	regControl = /^(Create(?!Debug).*|OpenDatabase|Odroid)$/,
 		// html char placeholders
-	_htm = {comma:',', colon:':', bsol:'\\', period:'.', lowbar:'_', verbar: '|', "#160":"\xa0", nbsp:"\xa0"},
+	_htm = {comma:',', colon:':', bsol:'\\', period:'.', lowbar:'_', verbar: '|', "#160":" ", nbsp:" "},
 		// defined in OnStart or later
 	functions, basefuncs, categories,
 		// current language
@@ -1086,7 +1109,7 @@ function OnStart() {
 var fs = require("fs");
 var rimraf = require("rimraf");
 var Prism = require('prismjs');
-
+require('prismjs/components/prism-java.min.js');
 
 if(typeof app == "undefined")
 	var app = {

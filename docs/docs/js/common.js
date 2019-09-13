@@ -7,6 +7,7 @@ var isChromeOS = ( agent.indexOf("Chrome OS") > -1 || agent.indexOf("Chromebook"
 var useWebIDE = ( agent.indexOf("Remix") > -1 || isChromeOS );
 var isAndroid = ( agent.indexOf("Android") > -1 );
 var isDS = ( agent.indexOf("; wv)") > -1 );
+var isApp = isAndroid && !useWebIDE && !isChromeOS;
 var serverAddress = "";
 
 // set current theme
@@ -130,7 +131,7 @@ function OnPageShow()
 			}
 			html += "</ul>";
 			$('#divPlugs').html(html);
-			$('#divPlugs').trigger("create")
+			$('#divPlugs').trigger("create");
 		}
 		//If on PC.
 		else
@@ -163,17 +164,10 @@ function OnPageShow()
 
 $(window).load(function()
 {
-	var popup = location.href.match(/#([a-z]+)/i);
-	if(popup)
-	{
-		popup = $("a.ui-link:contains(" + popup[1] + ")");
-		$("html").animate({ scrollTop: popup.offset().top - 100 }, 300)
-			.delay(350).queue(function(){ popup.click(); });
-	}
+	var anchor = location.href.match(/#([a-z]+)/i);
+	if(anchor) jumpTo(anchor[1]);
 	else if(sessionStorage.scrollPosition)
-	{
 		$("html").animate({scrollTop: sessionStorage.scrollPosition}, 300);
-	}
 });
 
 $(window).unload(function()
@@ -182,6 +176,26 @@ $(window).unload(function()
 	sessionStorage.scrollPosition = scrollPosition;
 	console.log("set: " + sessionStorage.scrollPosition)
 });
+
+function jumpTo(contains)
+{
+	// control popup
+	var popup = $("a.ui-link:contains(" + contains + ")");
+	if(popup.length) {
+		$("html").animate({ scrollTop: popup.offset().top - 100 }, 300)
+			.delay(350).queue(function(){ popup.click(); });
+		return false;
+	}
+
+	// header
+	var header = $(":header:contains(" + contains + ")");
+	if(header.length) {
+		$("html").animate({ scrollTop: header.offset().top - 100 }, 300);
+		if(header[0].className.indexOf("ui-collapsible-heading-collapsed") > -1)
+			header.click();
+		return false;
+	}
+}
 
 // set the current theme. (default, dark)
 function setTheme( theme )
@@ -214,13 +228,22 @@ function OpenUrl( url, type, choose )
 	return false;
 }
 
+function CheckApp()
+{
+	if(isApp) return true;
+	ShowPopup("Not running in DroidScript app.");
+	return false;
+}
+
 function OpenSamples()
 {
+	if(!IsApp()) return;
 	app.Execute("if(typeof btnSamp_OnTouch == 'function') btnSamp_OnTouch();");
 }
 
 function OpenSample(name)
 {
+	if(!IsApp()) return;
 	OpenSamples();
 	app.Execute("if(typeof lstSamp_OnTouch == 'function') lstSamp_OnTouch('" + name + "', '', 'x')");
 }

@@ -47,12 +47,12 @@
 			<div id="examp1" style="font-size:70%">
 				<span class="token keyword">function</span> <span class="token function">OnStart</span><span class="token punctuation">(</span><span class="token punctuation">)</span><br>
 				<span class="token punctuation">{</span><br>
-				    <b id="snip1" style="font-size:100%"><span class="token keyword">var</span> path <span class="token operator">=</span> app<span class="token punctuation">.</span><span class="token function">GetPermission</span><span class="token punctuation">(</span> <span class="token string">"extsdcard"</span><span class="token punctuation">,</span> OnPermission <span class="token punctuation">)</span><span class="token punctuation">;</span></b><br>
+				    <span style="display:inline-block"><b id="snip1" style="font-size:100%"><span class="token keyword">var</span> path <span class="token operator">=</span> app<span class="token punctuation">.</span><span class="token function">GetPermission</span><span class="token punctuation">(</span> <span class="token string">"extsdcard"</span><span class="token punctuation">,</span> OnPermission <span class="token punctuation">)</span><span class="token punctuation">;</span></b></span><br>
 				<span class="token punctuation">}</span><br>
 				<br>
 				<span class="token keyword">function</span> <span class="token function">OnPermission</span><span class="token punctuation">(</span> <span class="token parameter">pathURI</span> <span class="token punctuation">)</span><br>
 				<span class="token punctuation">{</span><br>
-				    app<span class="token punctuation">.</span><span class="token function">Alert</span><span class="token punctuation">(</span> pathURI <span class="token punctuation">)</span><span class="token punctuation">;</span><br>
+				    <span style="display:inline-block">app<span class="token punctuation">.</span><span class="token function">Alert</span><span class="token punctuation">(</span> pathURI <span class="token punctuation">)</span><span class="token punctuation">;</span></span><br>
 				<span class="token punctuation">}</span>
 			</div>
 			<div name="divCopy" align="right">
@@ -64,7 +64,7 @@
 	<br>
 	</div>
 
-	<div data-role="popup" id="pop_str_001" class="ui-content"><b>string:</b> <i>comma <docstr>“,”</docstr> separated:</i> <docstr>“Camera”</docstr> or <docstr>“ExtSDcard”</docstr> or <docstr>“Network”</docstr> or <docstr>“Storage”</docstr> or <docstr>“Overlay”</docstr> or <docstr>“SMS”</docstr></div>
+	<div data-role="popup" id="pop_str_001" class="ui-content"><b>string:</b> <i>comma <docstr>“,”</docstr> separated:</i> <docstr>“Camera”</docstr> or <docstr>“ExtSDcard”</docstr> or <docstr>“Network”</docstr> or <docstr>“Storage”</docstr> or <docstr>“Overlay”</docstr> or <docstr>“SMS”</docstr> or <docstr>“ExtSDcard”</docstr> or <docstr>“Location”</docstr> or <docstr>“Calendar”</docstr> or <docstr>“Body”</docstr> or <docstr>“Contacts”</docstr> or <docstr>“Record”</docstr> or <docstr>“Phone”</docstr> or <docstr>“Accounts”</docstr> or <docstr>“License”</docstr></div>
 	<div data-role="popup" id="pop_fnc_001" class="ui-content"><b>function</b>(
 		<a href="" onclick="app.ShowPopup('string')">ungranted</a>
 	)</div>
