@@ -6,10 +6,10 @@
 	<title>ScreenShot</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" id="themeJQ" href="../css/themes/default/theme-default.min.css"/>
+	<link rel="stylesheet" id="themeJQ" href="../css/themes/default/theme-dark.min.css"/>
 	<link rel="stylesheet" href="../css/themes/default/jquery.mobile.structure-1.2.0.min.css"/>
-	<link rel="stylesheet" id="themePrism" href="../css/themes/prism/default.min.css"/>
-	<link rel="stylesheet" id="themeDocs" href="../css/docs-default.min.css"/>
+	<link rel="stylesheet" id="themePrism" href="../css/themes/prism/dark.min.css"/>
+	<link rel="stylesheet" id="themeDocs" href="../css/docs-dark.min.css"/>
 
 	<script src="../js/energize-min.js"></script>
 	<script src="../js/jquery-1.8.1.min.js"></script>
@@ -41,7 +41,7 @@
 			<a href="#pop_num_prc" data-transition="pop" data-rel="popup">quality</a> )
 		</div>
 
-		<p>Quality is an <b>option</b>al percentage value for jpg files defaulting to 95.<br>
+		<p>Quality is an <strong>option</strong>al percentage value for jpg files defaulting to 95.<br>
 		<br>
 		See also: <a href="GetMediaFile.htm" data-ajax="false">GetMediaFile</a></p>
 		<div data-role="collapsible" data-collapsed="true" data-mini="true" data-theme="a" data-content-theme="a">
@@ -56,7 +56,7 @@
 				    <span style="display:inline-block">lay<span class="token punctuation">.</span><span class="token function">AddChild</span><span class="token punctuation">(</span> img <span class="token punctuation">)</span><span class="token punctuation">;</span></span><br>
 				    <span style="display:inline-block">app<span class="token punctuation">.</span><span class="token function">AddLayout</span><span class="token punctuation">(</span> lay <span class="token punctuation">)</span><span class="token punctuation">;</span></span><br>
 				    <br>
-				    <span style="display:inline-block"><b id="snip1" style="font-size:100%">app<span class="token punctuation">.</span><span class="token function">ScreenShot</span><span class="token punctuation">(</span> <span class="token string">"/sdcard/file.jpg"</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></b></span><br>
+				    <b id="snip1" style="font-size:100%"><span style="display:inline-block">app<span class="token punctuation">.</span><span class="token function">ScreenShot</span><span class="token punctuation">(</span> <span class="token string">"/sdcard/file.jpg"</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></span></b><br>
 				    <span style="display:inline-block">img<span class="token punctuation">.</span><span class="token function">SetImage</span><span class="token punctuation">(</span> <span class="token string">"/sdcard/file.jpg"</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></span><br>
 				<span class="token punctuation">}</span>
 			</div>
@@ -66,11 +66,13 @@
 			<a href="#" data-role="button" data-mini="true" data-inline="true" onclick="demo( examp1 )">      Run      </a>
 			</div>
 		</div>
-	<br>
+
+
+
 	</div>
 
-	<div data-role="popup" id="pop_str_pth" class="ui-content"><b>string:</b> <i>path to file or folder ( <docstr>“/absolute/...”</docstr> or <docstr>“relative/...”</docstr> )</i></div>
 	<div data-role="popup" id="pop_num_prc" class="ui-content"><b>number:</b> <i>percent</i></div>
+	<div data-role="popup" id="pop_str_pth" class="ui-content"><b>string:</b> <i>path to file or folder ( <docstr>“/absolute/...”</docstr> or <docstr>“relative/...”</docstr> )</i></div>
 </div>
 </body>
 

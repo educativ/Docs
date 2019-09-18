@@ -6,10 +6,10 @@
 	<title>CreateMediaStore</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" id="themeJQ" href="../css/themes/default/theme-default.min.css"/>
+	<link rel="stylesheet" id="themeJQ" href="../css/themes/default/theme-dark.min.css"/>
 	<link rel="stylesheet" href="../css/themes/default/jquery.mobile.structure-1.2.0.min.css"/>
-	<link rel="stylesheet" id="themePrism" href="../css/themes/prism/default.min.css"/>
-	<link rel="stylesheet" id="themeDocs" href="../css/docs-default.min.css"/>
+	<link rel="stylesheet" id="themePrism" href="../css/themes/prism/dark.min.css"/>
+	<link rel="stylesheet" id="themeDocs" href="../css/docs-dark.min.css"/>
 
 	<script src="../js/energize-min.js"></script>
 	<script src="../js/jquery-1.8.1.min.js"></script>
@@ -33,6 +33,14 @@
 	</div>
 
 	<div data-role="content">
+
+		<div class="samp samp-inline" style="font-size:revert; padding:10px 15px">
+		<b>Content:</b><br>
+		<span style="display:inline-block;padding-left:2em;">
+				- <a href="" onclick="jumpTo('Methods')">Methods</a><br>
+			</span><br>
+		</div>
+
 		<p>The MediaStore is used to query audio information from the android provider or from the device in the <docstr>“/sdcard/Music”</docstr> folder.</p>
 
 		<div class="samp">
@@ -150,7 +158,7 @@
 
 
 		<h3>Methods</h3>
-		<p>The following methods are available on the <b>MediaStore</b> object:</p>
+		<p>The following methods are available on the <strong>MediaStore</strong> object:</p>
 
 		<div class="samp">
 			<a href="#pop_dsc_001" data-transition="pop" data-rel="popup">GetAlbumArt</a>(
@@ -161,9 +169,9 @@
 		</div>
 		<div class="samp">
 			<a href="#pop_dsc_002" data-transition="pop" data-rel="popup">GetSongArt</a>(
-			<a href="#pop_dso_002" data-transition="pop" data-rel="popup">image</a>,
+			<a href="#pop_dso_001" data-transition="pop" data-rel="popup">image</a>,
 			<a href="#pop_num_int" data-transition="pop" data-rel="popup">id</a>,
-			<a href="#pop_str_002" data-transition="pop" data-rel="popup">options</a> )
+			<a href="#pop_str_001" data-transition="pop" data-rel="popup">options</a> )
 			→ <b>boolean</b>
 		</div>
 		<div class="samp">
@@ -173,19 +181,19 @@
 			<a href="#pop_dsc_004" data-transition="pop" data-rel="popup">QueryAlbums</a>(
 			<a href="#pop_str_sql" data-transition="pop" data-rel="popup">filter</a>,
 			<a href="#pop_str_003" data-transition="pop" data-rel="popup">sort</a>,
-			<a href="#pop_str_004" data-transition="pop" data-rel="popup">options</a> )
+			<a href="#pop_str_001" data-transition="pop" data-rel="popup">options</a> )
 		</div>
 		<div class="samp">
 			<a href="#pop_dsc_005" data-transition="pop" data-rel="popup">QueryArtists</a>(
 			<a href="#pop_str_sql" data-transition="pop" data-rel="popup">filter</a>,
 			<a href="#pop_str_005" data-transition="pop" data-rel="popup">sort</a>,
-			<a href="#pop_str_006" data-transition="pop" data-rel="popup">options</a> )
+			<a href="#pop_str_001" data-transition="pop" data-rel="popup">options</a> )
 		</div>
 		<div class="samp">
 			<a href="#pop_dsc_006" data-transition="pop" data-rel="popup">QueryMedia</a>(
 			<a href="#pop_str_sql" data-transition="pop" data-rel="popup">filter</a>,
 			<a href="#pop_str_007" data-transition="pop" data-rel="popup">sort</a>,
-			<a href="#pop_str_008" data-transition="pop" data-rel="popup">options</a> )
+			<a href="#pop_str_001" data-transition="pop" data-rel="popup">options</a> )
 		</div>
 		<div class="samp">
 			<a href="#pop_dsc_007" data-transition="pop" data-rel="popup">SetOnAlbumsResult</a>(
@@ -199,50 +207,37 @@
 			<a href="#pop_dsc_009" data-transition="pop" data-rel="popup">SetOnMediaResult</a>(
 			<a href="#pop_fnc_003" data-transition="pop" data-rel="popup">callback</a> )
 		</div>
-	<br>
+
 	</div>
 
-
-	<div data-role="popup" id="pop_dsc_001" class="ui-content"><b>med.GetAlbumArt</b><br>Loads the album image to an existing <a href="" onclick="app.ShowPopup('app object: CreateImage')">image</a>.</div>
-	<div data-role="popup" id="pop_dso_001" class="ui-content"><b>app object:</b> <a href="CreateImage.htm" data-ajax="false">Image</a></div>
 	<div data-role="popup" id="pop_num_int" class="ui-content"><b>number:</b> <i>integer</i></div>
-	<div data-role="popup" id="pop_str_001" class="ui-content"><b>string:</b> <docstr>“internal”</docstr> or <docstr>“external”</docstr></div>
-
-	<div data-role="popup" id="pop_dsc_002" class="ui-content"><b>med.GetSongArt</b><br>Loads the song image to an existing <a href="" onclick="app.ShowPopup('app object: CreateImage')">image</a>.</div>
-	<div data-role="popup" id="pop_dso_002" class="ui-content"><b>app object:</b> <a href="CreateImage.htm" data-ajax="false">Image</a></div>
-	<div data-role="popup" id="pop_str_002" class="ui-content"><b>string:</b> <docstr>“internal”</docstr> or <docstr>“external”</docstr></div>
-
-	<div data-role="popup" id="pop_dsc_003" class="ui-content"><b>med.GetType</b><br>Returns the control class name.</div>
-	<div data-role="popup" id="pop_dsc_004" class="ui-content"><b>med.QueryAlbums</b><br>Search for media albums.</div>
 	<div data-role="popup" id="pop_str_sql" class="ui-content"><b>string:</b> <i>sql code</i></div>
+	<div data-role="popup" id="pop_str_001" class="ui-content"><b>string:</b> <docstr>“internal”</docstr> or <docstr>“external”</docstr></div>
 	<div data-role="popup" id="pop_str_003" class="ui-content"><b>string:</b> <i>coloumns:</i> <docstr>“album”</docstr>, <docstr>“_id”</docstr>, <docstr>“albumArt”</docstr>, <docstr>“artist”</docstr>, <docstr>“numSongs”</docstr>, <docstr>“firstYear”</docstr>, <docstr>“lastYear”</docstr></div>
-	<div data-role="popup" id="pop_str_004" class="ui-content"><b>string:</b> <docstr>“internal”</docstr> or <docstr>“external”</docstr></div>
-
-	<div data-role="popup" id="pop_dsc_005" class="ui-content"><b>med.QueryArtists</b><br>Search for media artists.</div>
 	<div data-role="popup" id="pop_str_005" class="ui-content"><b>string:</b> <i>coloumns:</i> <docstr>“_id”</docstr>, <docstr>“artist”</docstr>, <docstr>“numAlbums”</docstr>, <docstr>“numTracks”</docstr></div>
-	<div data-role="popup" id="pop_str_006" class="ui-content"><b>string:</b> <docstr>“internal”</docstr> or <docstr>“external”</docstr></div>
-
-	<div data-role="popup" id="pop_dsc_006" class="ui-content"><b>med.QueryMedia</b><br>Search for media.</div>
 	<div data-role="popup" id="pop_str_007" class="ui-content"><b>string:</b> <i>coloumns:</i> <docstr>“title”</docstr>, <docstr>“_id”</docstr>, <docstr>“duration”</docstr>, <docstr>“size”</docstr>, <docstr>“uri”</docstr>, <docstr>“album”</docstr>, <docstr>“albumID”</docstr>, <docstr>“artist”</docstr>, <docstr>“artistId”</docstr></div>
-	<div data-role="popup" id="pop_str_008" class="ui-content"><b>string:</b> <docstr>“internal”</docstr> or <docstr>“external”</docstr></div>
-
-	<div data-role="popup" id="pop_dsc_007" class="ui-content"><b>med.SetOnAlbumsResult</b><br>Define a callback function which is called when an album query has finished.</div>
+	<div data-role="popup" id="pop_dso_001" class="ui-content"><b>app object:</b> <a href="CreateImage.htm" data-ajax="false">Image</a></div>
 	<div data-role="popup" id="pop_lst_001" class="ui-content"><b>list:</b> [{ <a href="" onclick="app.ShowPopup('string')">album</a>, <a href="" onclick="app.ShowPopup('number: integer')">id</a>, <a href="" onclick="app.ShowPopup('string: path to file or folder ( “/absolute/...” or “relative/...” )')">albumArt</a>, <a href="" onclick="app.ShowPopup('string')">artist</a>, <a href="" onclick="app.ShowPopup('number: integer')">numSongs</a>, <a href="" onclick="app.ShowPopup('string')">firstYear</a>, <a href="" onclick="app.ShowPopup('string')">lastYear</a> }]</div>
+	<div data-role="popup" id="pop_lst_002" class="ui-content"><b>list:</b> [{ <a href="" onclick="app.ShowPopup('number: integer')">id</a>, <a href="" onclick="app.ShowPopup('string')">artist</a>, <a href="" onclick="app.ShowPopup('number: integer')">numAlbums</a>, <a href="" onclick="app.ShowPopup('number: integer')">numTracks</a> }]</div>
+	<div data-role="popup" id="pop_lst_003" class="ui-content"><b>list:</b> [{ <a href="" onclick="app.ShowPopup('string')">title</a>, <a href="" onclick="app.ShowPopup('number: integer')">id</a>, <a href="" onclick="app.ShowPopup('number: milliseconds')">duration</a>, <a href="" onclick="app.ShowPopup('number: Bytes')">size</a>, <a href="" onclick="app.ShowPopup('string')">uri</a>, <a href="" onclick="app.ShowPopup('string')">album</a>, <a href="" onclick="app.ShowPopup('number: integer')">albumID</a>, <a href="" onclick="app.ShowPopup('string')">artist</a>, <a href="" onclick="app.ShowPopup('number: integer')">artistId</a> }]</div>
 	<div data-role="popup" id="pop_fnc_001" class="ui-content"><b>function</b>(
 		<a href="" onclick="switchPopup(this, '#pop_lst_001')" data-transition="pop" data-rel="popup">result</a>
 	)</div>
-
-	<div data-role="popup" id="pop_dsc_008" class="ui-content"><b>med.SetOnArtistsResult</b><br>Define a callback function which is called when a artist query has finished.</div>
-	<div data-role="popup" id="pop_lst_002" class="ui-content"><b>list:</b> [{ <a href="" onclick="app.ShowPopup('number: integer')">id</a>, <a href="" onclick="app.ShowPopup('string')">artist</a>, <a href="" onclick="app.ShowPopup('number: integer')">numAlbums</a>, <a href="" onclick="app.ShowPopup('number: integer')">numTracks</a> }]</div>
 	<div data-role="popup" id="pop_fnc_002" class="ui-content"><b>function</b>(
 		<a href="" onclick="switchPopup(this, '#pop_lst_002')" data-transition="pop" data-rel="popup">result</a>
 	)</div>
-
-	<div data-role="popup" id="pop_dsc_009" class="ui-content"><b>med.SetOnMediaResult</b><br>Define a callback function which is called when a media query has finished.</div>
-	<div data-role="popup" id="pop_lst_003" class="ui-content"><b>list:</b> [{ <a href="" onclick="app.ShowPopup('string')">title</a>, <a href="" onclick="app.ShowPopup('number: integer')">id</a>, <a href="" onclick="app.ShowPopup('number: milliseconds')">duration</a>, <a href="" onclick="app.ShowPopup('number: Bytes')">size</a>, <a href="" onclick="app.ShowPopup('string')">uri</a>, <a href="" onclick="app.ShowPopup('string')">album</a>, <a href="" onclick="app.ShowPopup('number: integer')">albumID</a>, <a href="" onclick="app.ShowPopup('string')">artist</a>, <a href="" onclick="app.ShowPopup('number: integer')">artistId</a> }]</div>
 	<div data-role="popup" id="pop_fnc_003" class="ui-content"><b>function</b>(
 		<a href="" onclick="switchPopup(this, '#pop_lst_003')" data-transition="pop" data-rel="popup">result</a>
 	)</div>
+	<div data-role="popup" id="pop_dsc_001" class="ui-content"><b>med.GetAlbumArt</b><br>Loads the album image to an existing <a href="" onclick="app.ShowPopup('app object: CreateImage')">image</a>.</div>
+	<div data-role="popup" id="pop_dsc_002" class="ui-content"><b>med.GetSongArt</b><br>Loads the song image to an existing <a href="" onclick="app.ShowPopup('app object: CreateImage')">image</a>.</div>
+	<div data-role="popup" id="pop_dsc_003" class="ui-content"><b>med.GetType</b><br>Returns the control class name.</div>
+	<div data-role="popup" id="pop_dsc_004" class="ui-content"><b>med.QueryAlbums</b><br>Search for media albums.</div>
+	<div data-role="popup" id="pop_dsc_005" class="ui-content"><b>med.QueryArtists</b><br>Search for media artists.</div>
+	<div data-role="popup" id="pop_dsc_006" class="ui-content"><b>med.QueryMedia</b><br>Search for media.</div>
+	<div data-role="popup" id="pop_dsc_007" class="ui-content"><b>med.SetOnAlbumsResult</b><br>Define a callback function which is called when an album query has finished.</div>
+	<div data-role="popup" id="pop_dsc_008" class="ui-content"><b>med.SetOnArtistsResult</b><br>Define a callback function which is called when a artist query has finished.</div>
+	<div data-role="popup" id="pop_dsc_009" class="ui-content"><b>med.SetOnMediaResult</b><br>Define a callback function which is called when a media query has finished.</div>
 </div>
 </body>
 

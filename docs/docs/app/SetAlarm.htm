@@ -6,10 +6,10 @@
 	<title>SetAlarm</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" id="themeJQ" href="../css/themes/default/theme-default.min.css"/>
+	<link rel="stylesheet" id="themeJQ" href="../css/themes/default/theme-dark.min.css"/>
 	<link rel="stylesheet" href="../css/themes/default/jquery.mobile.structure-1.2.0.min.css"/>
-	<link rel="stylesheet" id="themePrism" href="../css/themes/prism/default.min.css"/>
-	<link rel="stylesheet" id="themeDocs" href="../css/docs-default.min.css"/>
+	<link rel="stylesheet" id="themePrism" href="../css/themes/prism/dark.min.css"/>
+	<link rel="stylesheet" id="themeDocs" href="../css/docs-dark.min.css"/>
 
 	<script src="../js/energize-min.js"></script>
 	<script src="../js/jquery-1.8.1.min.js"></script>
@@ -51,8 +51,8 @@
 			<div id="examp1" style="font-size:70%">
 				<span class="token keyword">function</span> <span class="token function">OnStart</span><span class="token punctuation">(</span><span class="token punctuation">)</span><br>
 				<span class="token punctuation">{</span><br>
-				    <span style="display:inline-block"><b id="snip1" style="font-size:100%"><span class="token keyword">var</span> now <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span><br>
-				    <span style="display:inline-block">app<span class="token punctuation">.</span><span class="token function">SetAlarm</span><span class="token punctuation">(</span> <span class="token string">"Set"</span><span class="token punctuation">,</span> <span class="token number">1234</span><span class="token punctuation">,</span> OnAlarm<span class="token punctuation">,</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">3000</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></b></span><br>
+				    <b id="snip1" style="font-size:100%"><span style="display:inline-block"><span class="token keyword">var</span> now <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span><br>
+				    <span style="display:inline-block">app<span class="token punctuation">.</span><span class="token function">SetAlarm</span><span class="token punctuation">(</span> <span class="token string">"Set"</span><span class="token punctuation">,</span> <span class="token number">1234</span><span class="token punctuation">,</span> OnAlarm<span class="token punctuation">,</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">3000</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></span></b><br>
 				    <span style="display:inline-block"><span class="token comment">// app.ToBack();</span></span><br>
 				    <span style="display:inline-block"><span class="token comment">// app.Exit();</span></span><br>
 				<span class="token punctuation">}</span><br>
@@ -68,18 +68,20 @@
 			<a href="#" data-role="button" data-mini="true" data-inline="true" onclick="demo( examp1 )">      Run      </a>
 			</div>
 		</div>
-	<br>
+
+
+
 	</div>
 
+	<div data-role="popup" id="pop_num_dat" class="ui-content"><b>number:</b> <i>Datetime in milliseconds (from JS Date object)</i></div>
+	<div data-role="popup" id="pop_num_mls" class="ui-content"><b>number:</b> <i>milliseconds</i></div>
 	<div data-role="popup" id="pop_str_001" class="ui-content"><b>string:</b> <docstr>“Set”</docstr> or <docstr>“Repeat”</docstr> or <docstr>“Cancel”</docstr></div>
+	<div data-role="popup" id="pop_str_002" class="ui-content"><b>string:</b> <i>comma <docstr>“,”</docstr> separated:</i> <docstr>“ExactIdle”</docstr> or <docstr>“<a href="" onclick="app.ShowPopup('only works for single shot alarms')">Exact</a>”</docstr>, <docstr>“<a href="" onclick="app.ShowPopup('Opens main app if called from a service')">App</a>”</docstr></div>
 	<div data-role="popup" id="pop_mul_001" class="ui-content"><b>string</b><br><b>number:</b> <i>integer</i></div>
 	<div data-role="popup" id="pop_fnc_001" class="ui-content"><b>function</b>(
 		<a href="" onclick="app.ShowPopup('string
 number: integer')">id</a>
 	)</div>
-	<div data-role="popup" id="pop_num_dat" class="ui-content"><b>number:</b> <i>Datetime in milliseconds (from JS Date object)</i></div>
-	<div data-role="popup" id="pop_num_mls" class="ui-content"><b>number:</b> <i>milliseconds</i></div>
-	<div data-role="popup" id="pop_str_002" class="ui-content"><b>string:</b> <i>comma <docstr>“,”</docstr> separated:</i> <docstr>“ExactIdle”</docstr> or <docstr>“<a href="" onclick="app.ShowPopup('only works for single shot alarms')">Exact</a>”</docstr>, <docstr>“<a href="" onclick="app.ShowPopup('Opens main app if called from a service')">App</a>”</docstr></div>
 </div>
 </body>
 

@@ -6,10 +6,10 @@
 	<title>CreateWizard</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" id="themeJQ" href="../css/themes/default/theme-default.min.css"/>
+	<link rel="stylesheet" id="themeJQ" href="../css/themes/default/theme-dark.min.css"/>
 	<link rel="stylesheet" href="../css/themes/default/jquery.mobile.structure-1.2.0.min.css"/>
-	<link rel="stylesheet" id="themePrism" href="../css/themes/prism/default.min.css"/>
-	<link rel="stylesheet" id="themeDocs" href="../css/docs-default.min.css"/>
+	<link rel="stylesheet" id="themePrism" href="../css/themes/prism/dark.min.css"/>
+	<link rel="stylesheet" id="themeDocs" href="../css/docs-dark.min.css"/>
 
 	<script src="../js/energize-min.js"></script>
 	<script src="../js/jquery-1.8.1.min.js"></script>
@@ -33,6 +33,15 @@
 	</div>
 
 	<div data-role="content">
+
+		<div class="samp samp-inline" style="font-size:revert; padding:10px 15px">
+		<b>Content:</b><br>
+		<span style="display:inline-block;padding-left:2em;">
+				- <a href="" onclick="jumpTo('Page Initialisation')">Page Initialisation</a><br>
+				- <a href="" onclick="jumpTo('Methods')">Methods</a><br>
+			</span><br>
+		</div>
+
 		<p>The wizard is supposed to simplify a configuration progress which requires several inputs and decisions by the user.<br>
 		These can be settings and usage terms on first startup or an installation process as you might know from desktop applications.</p>
 
@@ -48,12 +57,12 @@
 		<p>The callback function will be called each time the user changes the wizard page.<br>
 		The functions gets the current wizard layout and the page index (starting from 1) to identify the current progress.</p>
 		<h3>Page Initialisation</h3>
-		<p>On the very first call the page index is <b>0</b> which means 'initialisation'.<br>
+		<p>On the very first call the page index is <b>0<strong> which means 'initialisation'.<br>
 		Then you have to create and add all wizard pages to the passed (frame) layout.<br>
 		<br>
-		In case the user cancels the wizard the index is <b>-1</b>.<br>
+		In case the user cancels the wizard the index is </strong>-1</b>.<br>
 		<br>
-		<div class='premHint'><b>Note: This function is a premium feature. Please consider subscribing to Premium to use this feature and support DroidScript in its further development.</b></div></p>
+		<div class='premHint'><strong>Note: This function is a premium feature. Please consider subscribing to Premium to use this feature and support DroidScript in its further development.</strong></div></p>
 		<div data-role="collapsible" data-collapsed="true" data-mini="true" data-theme="a" data-content-theme="a">
 			<h3>Example - Demo</h3>
 			<div id="examp1" style="font-size:70%">
@@ -117,7 +126,7 @@
 
 
 		<h3>Methods</h3>
-		<p>The following methods are available on the <b>Wizard</b> object:</p>
+		<p>The following methods are available on the <strong>Wizard</strong> object:</p>
 
 		<div class="samp">
 			<a href="#pop_dsc_001" data-transition="pop" data-rel="popup">Dismiss</a>()
@@ -128,8 +137,8 @@
 		<div class="samp">
 			<a href="#pop_dsc_003" data-transition="pop" data-rel="popup">GetButtons</a>() → <b>list:</b> <i>of objects:</i> [
 			<a href="#pop_dso_001" data-transition="pop" data-rel="popup">btnCancel</a>,
-			<a href="#pop_dso_002" data-transition="pop" data-rel="popup">btnPrev</a>,
-			<a href="#pop_dso_003" data-transition="pop" data-rel="popup">btnNext</a> ]
+			<a href="#pop_dso_001" data-transition="pop" data-rel="popup">btnPrev</a>,
+			<a href="#pop_dso_001" data-transition="pop" data-rel="popup">btnNext</a> ]
 		</div>
 		<div class="samp">
 			<a href="#pop_dsc_004" data-transition="pop" data-rel="popup">GetDialog</a>() → <b>app object:</b> <a href="CreateDialog.htm" data-ajax="false">Dialog</a>
@@ -149,23 +158,19 @@
 		<div class="samp">
 			<a href="#pop_dsc_009" data-transition="pop" data-rel="popup" class="baseFunc">Show</a>()
 		</div>
-	<br>
+
 	</div>
 
 	<div data-role="popup" id="pop_std_str" class="ui-content"><b>string</b></div>
 	<div data-role="popup" id="pop_num_frc" class="ui-content"><b>number:</b> <i>fraction (0..1)</i></div>
+	<div data-role="popup" id="pop_str_001" class="ui-content"><b>string:</b> <i>comma <docstr>“,”</docstr> separated:</i> <docstr>“AutoCancel”</docstr> or <docstr>“NoCancel”</docstr>, <docstr>“NoTitle”</docstr>, <docstr>“NoFocus”</docstr>, <docstr>“NoDim”</docstr>, <docstr>“NoKeys”</docstr>, <docstr>“TouchModal”</docstr>, <docstr>“NoTouch”</docstr></div>
+	<div data-role="popup" id="pop_dso_001" class="ui-content"><b>app object:</b> <a href="CreateButton.htm" data-ajax="false">Button</a></div>
 	<div data-role="popup" id="pop_fnc_001" class="ui-content"><b>function</b>(
 		<a href="" onclick="app.ShowPopup('app object: CreateLayout')">lay</a>,
 		<a href="" onclick="app.ShowPopup('number: integer')">page</a>
 	)</div>
-	<div data-role="popup" id="pop_str_001" class="ui-content"><b>string:</b> <i>comma <docstr>“,”</docstr> separated:</i> <docstr>“AutoCancel”</docstr> or <docstr>“NoCancel”</docstr>, <docstr>“NoTitle”</docstr>, <docstr>“NoFocus”</docstr>, <docstr>“NoDim”</docstr>, <docstr>“NoKeys”</docstr>, <docstr>“TouchModal”</docstr>, <docstr>“NoTouch”</docstr></div>
-
 	<div data-role="popup" id="pop_dsc_001" class="ui-content"><b>wiz.Dismiss</b><br>Hide the control and remove it from the screen.</div>
 	<div data-role="popup" id="pop_dsc_002" class="ui-content"><b>wiz.Finish</b><br>Indicate that the Wizard is going to finish on the next page.</div>
-	<div data-role="popup" id="pop_dso_001" class="ui-content"><b>app object:</b> <a href="CreateButton.htm" data-ajax="false">Button</a></div>
-	<div data-role="popup" id="pop_dso_002" class="ui-content"><b>app object:</b> <a href="CreateButton.htm" data-ajax="false">Button</a></div>
-	<div data-role="popup" id="pop_dso_003" class="ui-content"><b>app object:</b> <a href="CreateButton.htm" data-ajax="false">Button</a></div>
-
 	<div data-role="popup" id="pop_dsc_003" class="ui-content"><b>wiz.GetButtons</b><br>Returns the list of the three control buttons at the bottom of the wizard.</div>
 	<div data-role="popup" id="pop_dsc_004" class="ui-content"><b>wiz.GetDialog</b><br>Returns the <a href="" onclick="app.ShowPopup('app object: CreateDialog')">dialog</a> object of the wizard.</div>
 	<div data-role="popup" id="pop_dsc_005" class="ui-content"><b>wiz.GetLayout</b><br>Return s the content <a href="" onclick="app.ShowPopup('app object: CreateLayout')">layout</a> object of the wizard.</div>

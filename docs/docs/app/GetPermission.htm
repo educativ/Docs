@@ -6,10 +6,10 @@
 	<title>GetPermission</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" id="themeJQ" href="../css/themes/default/theme-default.min.css"/>
+	<link rel="stylesheet" id="themeJQ" href="../css/themes/default/theme-dark.min.css"/>
 	<link rel="stylesheet" href="../css/themes/default/jquery.mobile.structure-1.2.0.min.css"/>
-	<link rel="stylesheet" id="themePrism" href="../css/themes/prism/default.min.css"/>
-	<link rel="stylesheet" id="themeDocs" href="../css/docs-default.min.css"/>
+	<link rel="stylesheet" id="themePrism" href="../css/themes/prism/dark.min.css"/>
+	<link rel="stylesheet" id="themeDocs" href="../css/docs-dark.min.css"/>
 
 	<script src="../js/energize-min.js"></script>
 	<script src="../js/jquery-1.8.1.min.js"></script>
@@ -33,7 +33,7 @@
 	</div>
 
 	<div data-role="content">
-		<p>GetPermission accepts a list of 'dangerus' classified permissions and returns a list of ungranted permissions in the <b>callback</b> function, or in case of only <docstr>“ExtSDCard”</docstr> the path URI of the user-selected folder.</p>
+		<p>GetPermission accepts a list of 'dangerus' classified permissions and returns a list of ungranted permissions in the <strong>callback</strong> function, or in case of only <docstr>“ExtSDCard”</docstr> the path URI of the user-selected folder.</p>
 
 		<div class="samp">
 		app.GetPermission(
@@ -47,7 +47,7 @@
 			<div id="examp1" style="font-size:70%">
 				<span class="token keyword">function</span> <span class="token function">OnStart</span><span class="token punctuation">(</span><span class="token punctuation">)</span><br>
 				<span class="token punctuation">{</span><br>
-				    <span style="display:inline-block"><b id="snip1" style="font-size:100%"><span class="token keyword">var</span> path <span class="token operator">=</span> app<span class="token punctuation">.</span><span class="token function">GetPermission</span><span class="token punctuation">(</span> <span class="token string">"extsdcard"</span><span class="token punctuation">,</span> OnPermission <span class="token punctuation">)</span><span class="token punctuation">;</span></b></span><br>
+				    <b id="snip1" style="font-size:100%"><span style="display:inline-block"><span class="token keyword">var</span> path <span class="token operator">=</span> app<span class="token punctuation">.</span><span class="token function">GetPermission</span><span class="token punctuation">(</span> <span class="token string">"extsdcard"</span><span class="token punctuation">,</span> OnPermission <span class="token punctuation">)</span><span class="token punctuation">;</span></span></b><br>
 				<span class="token punctuation">}</span><br>
 				<br>
 				<span class="token keyword">function</span> <span class="token function">OnPermission</span><span class="token punctuation">(</span> <span class="token parameter">pathURI</span> <span class="token punctuation">)</span><br>
@@ -61,7 +61,9 @@
 			<a href="#" data-role="button" data-mini="true" data-inline="true" onclick="demo( examp1 )">      Run      </a>
 			</div>
 		</div>
-	<br>
+
+
+
 	</div>
 
 	<div data-role="popup" id="pop_str_001" class="ui-content"><b>string:</b> <i>comma <docstr>“,”</docstr> separated:</i> <docstr>“Camera”</docstr> or <docstr>“ExtSDcard”</docstr> or <docstr>“Network”</docstr> or <docstr>“Storage”</docstr> or <docstr>“Overlay”</docstr> or <docstr>“SMS”</docstr> or <docstr>“ExtSDcard”</docstr> or <docstr>“Location”</docstr> or <docstr>“Calendar”</docstr> or <docstr>“Body”</docstr> or <docstr>“Contacts”</docstr> or <docstr>“Record”</docstr> or <docstr>“Phone”</docstr> or <docstr>“Accounts”</docstr> or <docstr>“License”</docstr></div>

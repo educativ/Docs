@@ -6,10 +6,10 @@
 	<title>App Events</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" id="themeJQ" href="../css/themes/default/theme-default.min.css"/>
+	<link rel="stylesheet" id="themeJQ" href="../css/themes/default/theme-dark.min.css"/>
 	<link rel="stylesheet" href="../css/themes/default/jquery.mobile.structure-1.2.0.min.css"/>
-	<link rel="stylesheet" id="themePrism" href="../css/themes/prism/default.min.css"/>
-	<link rel="stylesheet" id="themeDocs" href="../css/docs-default.min.css"/>
+	<link rel="stylesheet" id="themePrism" href="../css/themes/prism/dark.min.css"/>
+	<link rel="stylesheet" id="themeDocs" href="../css/docs-dark.min.css"/>
 
 	<script src="../js/energize-min.js"></script>
 	<script src="../js/jquery-1.8.1.min.js"></script>
@@ -20,24 +20,38 @@
 </head>
 
 <body>
+<div data-role="page" data-theme="a">
 
-<div data-role="page" data-theme="a" >
-
-	<div data-role="header">
+	<div data-role="header" data-position="fixed">
 		<a href='#' class='ui-btn-left' data-icon='arrow-l' onclick="history.back(); return false">Back</a>
 		<h1>App Events</h1>
 		<a class="ui-btn-right" data-icon="gear" data-iconpos="notext" onclick="setTheme(getTheme() == 'default' ? 'dark' : 'default')"></a>
-	</div><!-- /header -->
+	</div>
 
 	<div style="position:fixed; top:40px; width:100%; text-align:center; z-index:1101;">
 		<div id="appPopup" class="androidPopup">Hello World</div>
 	</div>
 
 	<div data-role="content">
+
+		<div class="samp samp-inline" style="font-size:revert; padding:10px 15px">
+		<b>Content:</b><br>
+		<span style="display:inline-block;padding-left:2em;">
+				- <a href="" onclick="jumpTo('OnStart()')">OnStart()</a><br>
+				- <a href="" onclick="jumpTo('OnMenu(name)')">OnMenu(name)</a><br>
+				- <a href="" onclick="jumpTo('OnBack()')">OnBack()</a><br>
+				- <a href="" onclick="jumpTo('OnPause()')">OnPause()</a><br>
+				- <a href="" onclick="jumpTo('OnResume()')">OnResume()</a><br>
+				- <a href="" onclick="jumpTo('OnConfig()')">OnConfig()</a><br>
+				- <a href="" onclick="jumpTo('OnAlarm()')">OnAlarm()</a><br>
+				- <a href="" onclick="jumpTo('OnData()')">OnData()</a><br>
+			</span><br>
+		</div>
+
 		<p>In your app you can use various event functions which will be automatically called by DroidScript.</p>
 		<h3>OnStart()</h3>
-		<p>This is probably the most popular one. It will be called when DroidScript has initialized and it is the last function which will be called from global scope. That means every timeout you might have set will be called <b>after</b> OnStart was called.<br>
-		When OnStart has returned, the apps '<b>started</b>' state will be set to <span class="token boolean">true</span>. Therefore <b>app.<a href="../app/IsStarted.htm" data-ajax="false">IsStarted</a>()</b> method will return <span class="token boolean">true</span> as well.</p>
+		<p>This is probably the most popular one. It will be called when DroidScript has initialized and it is the last function which will be called from global scope. That means every timeout you might have set will be called <strong>after</strong> OnStart was called.<br>
+		When OnStart has returned, the apps '<strong>started</strong>' state will be set to <span class="token boolean">true</span>. Therefore <strong>app.<a href="../app/IsStarted.htm" data-ajax="false">IsStarted</a>()</strong> method will return <span class="token boolean">true</span> as well.</p>
 
 		<div data-role="collapsible" data-collapsed="true" data-mini="true" data-theme="a" data-content-theme="a">
 			<h3>Example - OnStart</h3>
@@ -68,7 +82,7 @@
 			<div id="examp2" style="font-size:70%">
 				<span class="token keyword">function</span> <span class="token function">OnStart</span><span class="token punctuation">(</span><span class="token punctuation">)</span><br>
 				<span class="token punctuation">{</span><br>
-				    <span style="display:inline-block"><b id="snip2" style="font-size:100%">app<span class="token punctuation">.</span><span class="token function">SetMenu</span><span class="token punctuation">(</span> <span class="token string">"Start,Stop,Pause"</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></b></span><br>
+				    <b id="snip2" style="font-size:100%"><span style="display:inline-block">app<span class="token punctuation">.</span><span class="token function">SetMenu</span><span class="token punctuation">(</span> <span class="token string">"Start,Stop,Pause"</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></span></b><br>
 				    <br>
 				    <span style="display:inline-block">lay <span class="token operator">=</span> app<span class="token punctuation">.</span><span class="token function">CreateLayout</span><span class="token punctuation">(</span> <span class="token string">"linear"</span><span class="token punctuation">,</span> <span class="token string">""</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></span><br>
 				    <br>
@@ -202,7 +216,7 @@
 		</div>
 
 		<h3>OnAlarm()</h3>
-		<p>If you have set up an app <a href="../app/SetAlarm" onclick="return OpenUrl(this.href);">Alarm</a> and it is triggered it will call the OnAlarm event.</p>
+		<p>If you have set up an app <a href="../app/SetAlarm.htm" data-ajax="false">Alarm</a> and it is triggered it will call the OnAlarm event.</p>
 
 		<div data-role="collapsible" data-collapsed="true" data-mini="true" data-theme="a" data-content-theme="a">
 			<h3>Example - OnAlarm</h3>
@@ -262,9 +276,11 @@
 			</div>
 		</div>
 
-	</div><!-- /content -->
 
-</div><!-- /page -->
+	</div>
 
+
+</div>
 </body>
+
 </html>

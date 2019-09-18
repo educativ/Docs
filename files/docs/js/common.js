@@ -83,6 +83,9 @@ $(document).live( 'pageshow',function(event, ui)
 		//Remove 'Copy' and 'Run' buttons on PC.
 		if( !isAndroid || useWebIDE && !isChromeOS )
 			hidecopy();
+		
+		// hide theme switch button inside DS
+		if(isDS) $(".ui-header > .ui-btn-right").hide();
 
 		//If on Android, save current page.
 		if( isDS && !useWebIDE ) {
@@ -174,13 +177,12 @@ $(window).unload(function()
 {
 	var scrollPosition = $(document).scrollTop();
 	sessionStorage.scrollPosition = scrollPosition;
-	console.log("set: " + sessionStorage.scrollPosition)
 });
 
 function jumpTo(contains)
 {
 	// control popup
-	var popup = $("a.ui-link:contains(" + contains + ")");
+	var popup = $("div.samp > a.ui-link:contains(" + contains + ")");
 	if(popup.length) {
 		$("html").animate({ scrollTop: popup.offset().top - 100 }, 300)
 			.delay(350).queue(function(){ popup.click(); });
@@ -190,9 +192,15 @@ function jumpTo(contains)
 	// header
 	var header = $(":header:contains(" + contains + ")");
 	if(header.length) {
-		$("html").animate({ scrollTop: header.offset().top - 100 }, 300);
+		$("html").animate({ scrollTop: header.offset().top - 50 }, 300);
+		
 		if(header[0].className.indexOf("ui-collapsible-heading-collapsed") > -1)
 			header.click();
+		else
+			header.delay(100)
+				.animate({opacity: 0.1}, 400)
+				.animate({opacity: 1.0}, 400);
+		
 		return false;
 	}
 }
@@ -228,7 +236,7 @@ function OpenUrl( url, type, choose )
 	return false;
 }
 
-function CheckApp()
+function IsApp()
 {
 	if(isApp) return true;
 	ShowPopup("Not running in DroidScript app.");
