@@ -668,7 +668,7 @@
 				"shortDesc": "Returns a new list of possible picture dimensions"
 			},
 			"GetPixelData": {
-				"desc": "Returns the pixel data of the current camery view in a base64 encoded raw bitmap, png or jpg format.",
+				"desc": "Returns the current camera's raw, png or jpg image datas encoded as base64.",
 				"isfunc": true,
 				"name": "GetPixelData",
 				"pNames": ["format", "left", "top", "width", "height"],
@@ -2275,7 +2275,7 @@
 				"shortDesc": "Cache draw commands"
 			},
 			"DrawArc": {
-				"desc": "Draws an elliptical arc.",
+				"desc": "Draws an elliptical arc by specifying the corners of the surrounding rectangle and the angle range of the arc to be drawn.",
 				"isfunc": true,
 				"name": "DrawArc",
 				"pNames": ["x1", "y1", "x2", "y2", "start", "sweep"],
@@ -2339,11 +2339,11 @@
 				"shortDesc": "Draws a rectangle"
 			},
 			"DrawSamples": {
-				"desc": "Draws a vertically centered graph in relation to the specified range in both direction.\nThe sample value 0 would be vertically centered, -range at the top and range at the bottom.\nThe sample x positions are evenly distributed over the whole image width.",
+				"desc": "Draws a vertically centered graph in relation to the specified range in both direction.\nThe sample value _0_ would be vertically centered, _-range_ at the top and _range_ at the bottom.\nThe sample x positions are evenly distributed over the whole image width.",
 				"isfunc": true,
 				"name": "DrawSamples",
 				"pNames": ["data", "range"],
-				"pTypes": ["lst-[ data:num ]", "num"],
+				"pTypes": ["lst-[ data:num_int ]", "num"],
 				"shortDesc": "Draws a vertically centered sample graph"
 			},
 			"DrawText": {
@@ -2783,7 +2783,7 @@
 		"isfunc": true,
 		"name": "CreateList",
 		"pNames": ["list", "width", "height", "options"],
-		"pTypes": ["str", "num_frc", "num_frc", "str_com-Expand:Expand list to full height inside scrollers,Menu:applies various settings to make the list appear like an in-app menu,Horiz:makes title and body text flow horizontally,html,FontAwesome,Normal,WhiteGrad|AlumButton|GreenButton|OrangeButton,NoSound"],
+		"pTypes": ["str", "num_frc", "num_frc", "str_com-Expand:Expand list to full height inside scrollers,Menu:applies various settings to make the list appear like an in-app menu,Horiz:makes title and body text flow horizontally,html,FontAwesome,monospace,Normal,WhiteGrad|AlumButton|GreenButton|OrangeButton,NoSound"],
 		"retval": "dso-List",
 		"shortDesc": "Returns a new List object",
 		"subf": {
@@ -5914,7 +5914,7 @@
 		"isfunc": true,
 		"name": "CreateTextEdit",
 		"pNames": ["text", "width", "height", "options"],
-		"pTypes": ["str", "num_frc", "num_frc", "str_com-AutoSelect:Select all Text if user enter the Textedit,AutoSize:Expand or shrink the control automatically so the text fits in the Textedit,Bold:Write bold text,Extract:enables full screen keyboard in landscape mode,Left:Justify the text to the left|Center:Justify the text in the middle|Right:Justify the text to the right|Monospace,NoSpell:Disable the spell-checker,NoKeyboard:Shows no Keyboard|Numbers,ReadOnly:The user cant change the Text,SingleLine:Dont break text for long lines,FillX/Y,Password:displays characters as dots"],
+		"pTypes": ["str", "num_frc", "num_frc", "str_com-AutoSelect:Select all Text if user enter the Textedit,AutoSize:Expand or shrink the control automatically so the text fits in the Textedit,Bold:Write bold text,Extract:enables full screen keyboard in landscape mode,Left:Justify the text to the left|Center:Justify the text in the middle|Right:Justify the text to the right|Monospace,NoSpell:Disable the spell-checker,NoKeyboard:Shows no Keyboard|Numbers,ReadOnly:The user cant change the Text,SingleLine:Dont break text for long lines and change 'Enter' key to 'Done',FillX/Y,Password:displays characters as dots"],
 		"retval": "dso-TextEdit",
 		"shortDesc": "Returns a new TextEdit object",
 		"subf": {
@@ -6104,7 +6104,7 @@
 			"SetMargins": "#1741900074",
 			"SetOnChange": "#2137502353",
 			"SetOnEnter": {
-				"desc": "Define a callback function which is called when the user pressed 'Done' or 'Enter' on the keyboard (line can still be inserted via Shift+Enter)",
+				"desc": "Define a callback function which is called when the user pressed 'Done' or 'Enter' on the keyboard (line can still be inserted via Shift+Enter)\nAlong with the “SingleLine” option it changes the keyboards _'Enter'_ key to _'Done'_ or _'Ok'_",
 				"isfunc": true,
 				"name": "SetOnEnter",
 				"pNames": ["callback"],

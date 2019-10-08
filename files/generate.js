@@ -1,40 +1,41 @@
 #!/usr/bin/env node
 
-var curDoc, curSubf, curScope;
-var warnEnbl = false, Globals;
-var scope, base, cats, regGen;
-
-var scopes = {
-	"intro": "Introduction",
-	"app": "Reference",
-	"gfx":"Game Engine"
-};
+var curDoc, curSubf, curScope, lang;
+var warnEnbl = false, Globals, conf;
+var scope, base, navs, regGen, regHide, regControl;
 
 function generateScope(name, pattern)
 {
 	curScope = name;
 	regGen = RegExp(pattern || ".*");
 
+	if(!app.FolderExists(lang)) Throw(Error(`Language '${lang}' doesn't exist.`));
+
+	if(!app.FolderExists("docs" + getl())) app.CopyFolder("docs-base", "docs" + getl());
+	else app.ListFolder("docs" + getl()).map(f =>
+		f.startsWith(curScope + "_") && app.DeleteFile(`docs${getl()}/` + f));
+
+	if(!app.FileExists(lang + `/${name}.json`) && !app.FolderExists(lang + "/" + name))
+		Throw(Error(`Scope '${name}' doesn't exist.`));
+
 	if(!pattern) {
-		app.ListFolder("docs" + getl()).map(f =>
-			f.startsWith(curScope + "_") && app.DeleteFile(`docs${getl()}/` + f));
-		app.DeleteFolder(`docs${getl()}/${curScope}`);
-		app.MakeFolder(`docs${getl()}/${curScope}`);
+		app.DeleteFolder(`docs${getl()}/` + curScope);
+		app.MakeFolder(`docs${getl()}/` + curScope);
 	}
-	if(!app.FolderExists(`${curScope}-samples`))
-		app.MakeFolder(`${curScope}-samples`);
+	if(!app.FolderExists(lang + `/${curScope}-samples`))
+		app.MakeFolder(lang + `/${curScope}-samples`);
 
 	// read categories
-	cats = JSON.parse(ReadFile(curScope + `-cats${getl()}.json`, "{}"));
+	navs = JSON.parse(ReadFile(lang + `/${curScope}-navs.json`, "{}"));
 
 	// read scope members
-	if(scope = JSON.parse(ReadFile(curScope + getl() + ".json", "false")))
+	if(scope = JSON.parse(ReadFile(lang + `/${curScope}.json`, "false")))
 	{
-		if(!keys(cats).length) cats = keys(scope);
-		else cats.All = keys(scope);
+		if(!keys(navs).length) navs = keys(scope);
+		else navs.All = keys(scope);
 
 		// read base functions used in scope
-		if(base = JSON.parse(ReadFile(curScope + `-base${getl()}.json`, "false")))
+		if(base = JSON.parse(ReadFile(lang + `/${curScope}-base.json`, "false")))
 		{
 			// additionally, read /*#obj*/ marked functions from .js file if exists
 			if(!app.FileExists(curScope + ".js")) base.all = keys(base).map(k => base[k].name);
@@ -53,18 +54,18 @@ function generateScope(name, pattern)
 	{
 		regGen = RegExp("(?=^info$)[]|(?!^info$)^.*" + regGen.source);
 		// add files from scope folder to be generated
-		scope = {}; base = false; cats = [];
-		for(var n of app.ListFolder(curScope))
+		scope = {}; base = false; navs = [];
+		for(var n of app.ListFolder(lang + "/" + curScope))
 		{
 			n = n.slice(0, n.lastIndexOf("."));
-			cats.push(n.replace(/^\s+/, ""));
-			scope[n] = { desc: `#${n}.md`, name: cats[cats.length - 1] };
+			navs.push(n.replace(/^\s+/, ""));
+			scope[n] = { desc: `#${n}.md`, name: navs[navs.length - 1] };
 		}
 	}
 
 	// start generating
 	if("navs".match(regGen))
-		generateNavigators(cats, scopes[curScope] || curScope);
+		generateNavigators(navs, conf.scopes[curScope] || curScope);
 	generateDocs(scope);
 
 	// update version number
@@ -73,31 +74,31 @@ function generateScope(name, pattern)
 	app.WriteFile("version.txt", v + vn);
 }
 
-function generateNavigators(cats, name, pfx)
+function generateNavigators(navs, name, pfx)
 {
 	curDoc = `docs${getl()}/${pfx||''}${name.replace(/\s+/g,'')}.htm`;
 	pfx = `${pfx||curScope}_`;
 	var nav = '';
 
-	if(cats instanceof Array)
+	if(navs instanceof Array)
 	{
-		for(var func of cats = cats.filter(nothidden))
-			nav += func ? newNaviItem(`${curScope}/${func.replace(/\s+/g,'')}.htm`,
+		for(var func of navs = navs.filter(nothidden))
+			nav += func ? newNaviItem(curScope + `/${func.replace(/\s+/g,'')}.htm`,
 				func.replace(/^\d+\s*/, ''), getAddClass(scope[func])) : "<li></li>";
 	}
-	else if(cats instanceof Object)
+	else if(navs instanceof Object)
 	{
-		for(var cat of keys(cats).filter(nothidden).sort(sortAsc))
+		for(var cat of keys(navs).filter(nothidden).sort(sortAsc))
 		{
 			nav += newNaviItem(`${pfx + cat.replace(/\s+/g,'')}.htm`, cat );
 			var tdoc = curDoc;
-				generateNavigators(cats[cat], cat, pfx);
+				generateNavigators(navs[cat], cat, pfx);
 			curDoc = tdoc;
 		}
-	} else Throw(Error("Wrong catlist datatype: " + typeof cats));
+	} else Throw(Error("Wrong catlist datatype: " + typeof navs));
 
 	app.WriteFile( curDoc,
-		(keys(cats).length < 15 ? naviBase :
+		(keys(navs).length < 15 ? naviBase :
 			naviBase.replace( 'data-filter="false"', 'data-filter="true"' ))
 		.replace( "%l", nav )
 		.replace( /%t/g, name )
@@ -107,7 +108,7 @@ function generateNavigators(cats, name, pfx)
 //generates doc files
 function generateDocs(scope)
 {
-	curDoc = curScope;
+	curDoc = lang + "/" + curScope;
 	var lst = keys(scope).filter(nothidden).filter(n => !!n.match(regGen));
 
 	for( var i = 0; i < lst.length; i++ )
@@ -118,7 +119,7 @@ function generateDocs(scope)
 
 	if(!"info".match(regGen)) return;
 
-	curDoc = curScope + "-info.json";
+	curDoc = lang + `/${curScope}-info.json`;
 	var tsubf, info = { [curScope]: {} };
 
 	for(var name of keys(scope).filter(nothidden))
@@ -161,7 +162,7 @@ function generateDoc( name )
 	// get description from external file
 	if(desc[0] == '#')
 	{
-		desc = ReadFile(`${curScope}/${desc.slice(1)}`, false);
+		desc = ReadFile(lang + `/${curScope}/${desc.slice(1)}`, false);
 		if(!desc) Throw(Error(`description file ${scope[name].desc.slice(1)} linked but doesn't exist.`));
 	}
 
@@ -276,7 +277,7 @@ function adjustDoc(html, name)
 				else return `${w1||''}<span class="samp samp-inline">${code}</span>${w2||''}`;
 			})
 		.replace(/(\n\t+(    )+)(<b .*?>)?([^]*?)(<\/b>)?<br>/g, (m, w, _, b1, t, b2) =>
-			`${w}${b1||''}<span style="display:inline-block">${t}</span>${b2||''}<br>`)
+			w + `${b1||''}<span style="display:inline-block">${t}</span>${b2||''}<br>`)
 		// remove leading whitespace in <p> tag
 		.replace(/<p>(<br>|\s+)+/g, "<p>")
 		// remove trailing whitespace in <p> tag
@@ -302,7 +303,7 @@ function formatDesc(desc, name, hasData)
 	var sampcnt = keys(samples).length;
 	if(!has(desc, '.')) desc += '.';
 
-	desc = desc.replace(/(\s|<br>)*<sample( (.*?))?>([^]*?)<\/sample\2>/g,
+	desc = desc.replace(/(\s|<br>)*<sample( (.*?))?>([^]*?)<\/sample\2?>/g,
 		function(m, _, _, t, c)
 		{
 			samples[_ = t || sampcnt + 1] = toHtmlSamp(c, t, ++sampcnt);
@@ -434,7 +435,7 @@ function getDocData( f, useAppPop )
 // read and return html converted example snippets file
 function getSamples( name )
 {
-	var sampcnt = 0, samples = {}, s = ReadFile(`${curScope}-samples/${name}.txt`, " ", true );
+	var sampcnt = 0, samples = {}, s = ReadFile(lang + `/${curScope}-samples/${name}.txt`, " ", true );
 
 	s.replace(/<sample( (.*?))?>([^]*?)<\/sample\1?>/g,
 		(m, _, t, c) => samples[t || sampcnt + 1] = toHtmlSamp(c, t, ++sampcnt)
@@ -490,7 +491,7 @@ function typeDesc( types )
 			return [type.slice(0, 3)].concat(
 					// custom type desc
 				type.replace(/^(...):([^-]*)/, (m, btype, desc) =>
-						(typedesc[btype + "_tmp"] = desc, btype + "_tmp"))
+						(conf.tdesc[btype + "_tmp"] = desc, btype + "_tmp"))
 					// sample vals
 					.replace(/-/, '\x01').split('\x01')
 			)
@@ -499,9 +500,9 @@ function typeDesc( types )
 
 	var last = "</b>";
 	var s = types.map(
-		(type, i) => typenames[type[0]] ?
-			"<b>" + typenames[type[0]] + (typedesc[type[1]] ?
-				(last = "</i>", ":</b> <i>" + typedesc[type[1]]) : ""
+		(type, i) => conf.tname[type[0]] ?
+			"<b>" + conf.tname[type[0]] + (conf.tdesc[type[1]] ?
+				(last = "</i>", ":</b> <i>" + conf.tdesc[type[1]]) : ""
 			) + (type[2] ? `:${last} ` : last) : undefined
 	);
 
@@ -562,7 +563,7 @@ function toArgPop( name, types, doSwitch )
 			return [type.slice(0,3)].concat(
 					// custom type desc
 				type.replace(/^(...):([^-]*)/, (m, btype, desc) =>
-						(typedesc[btype + "_tmp"] = desc, btype + "_tmp"))
+						(conf.tdesc[btype + "_tmp"] = desc, btype + "_tmp"))
 					// sample vals
 					.replace(/-/, '\x01').split('\x01')
 			)
@@ -573,9 +574,9 @@ function toArgPop( name, types, doSwitch )
 	// <b>type[:]</b> [[<i>desc[:]</i>] values]
 	var last;
 	var s = types
-		.map((type, i) => "<b>" + typenames[type[0]] +
-			(last = "</b>", typedesc[type[1]] ?
-				(last = "</i>", ":</b> <i>" + typedesc[type[1]]) : ""
+		.map((type, i) => "<b>" + conf.tname[type[0]] +
+			(last = "</b>", conf.tdesc[type[1]] ?
+				(last = "</i>", ":</b> <i>" + conf.tdesc[type[1]]) : ""
 			) + (type[2] ? `:${last} ` : last)
 		);
 
@@ -639,8 +640,8 @@ function toArgAppPop( name, types )
 
 	return newAppPopup(
 		name, types.map(
-			(type) => typenames[type[0]] +
-				(typedesc[type[1]] ? ": " + typedesc[type[1]] : "") +
+			(type) => conf.tname[type[0]] +
+				(conf.tdesc[type[1]] ? ": " + conf.tdesc[type[1]] : "") +
 				(type.length == 3 ? ": " + rplop(type[2], type[0] == "str") : "")
 			).join("\n")
 	);
@@ -679,12 +680,12 @@ function replaceTypes(s, useAppPop)
 				if(desc.endsWith(' ')) space = ' ';
 				desc = desc.slice(desc[0] == '"', space ? -1 : undefined);
 				if(desc[0] == "'") tapop = true, desc = desc.slice(1);
-				if(typenames[desc.slice(0, 3)] && !desc[4].match(/[a-z]/i)) type = desc, desc = '';
+				if(conf.tname[desc.slice(0, 3)] && !desc[4].match(/[a-z]/i)) type = desc, desc = '';
 			}
 
 			if( type )
 			{
-				if(typenames[type.slice(0, 3)]) {
+				if(conf.tname[type.slice(0, 3)]) {
 					if(desc) type += '-' + desc, desc = ''; }
 				else
 					desc = type + (desc || ''), type = '';
@@ -693,8 +694,8 @@ function replaceTypes(s, useAppPop)
 			if(useAppPop || tapop)
 			{
 				if(type && !desc) r = toArgAppPop(name, type);
-				else r = newAppPopup(name, type ? typenames[type.slice(0, 3)] +
-						(typedesc[type] ? ": " + typedesc[type] : "") : desc);
+				else r = newAppPopup(name, type ? conf.tname[type.slice(0, 3)] +
+						(conf.tdesc[type] ? ": " + conf.tdesc[type] : "") : desc);
 			}
 			else if(type) r = toArgPop(name, type);
 			else r = newPopup("dsc", name, desc);
@@ -713,12 +714,10 @@ function addMarkdown(s)
 		// links
 		.replace(/([^\\]|^)\[([^\]}]*)\]\((.*?)\)/g, function(match, white, name, url)
 		{
-			// exists in docs folder? direct link : open in external app
-			return white + (!url.startsWith("http") &&
-				(app.FileExists("docs/" + url.replace(/\.\.\/|#.*/g, "")) ||
-				app.FileExists(`docs/${curScope}/` + url.replace(/\.\.\/|#.*/g, ""))) ?
-				`<a href="${url}" data-ajax="false">` :
-				`<a href="${url}" onclick="return OpenUrl(this.href);">`)
+			// web link ? external : internal
+			return white + (url.startsWith("http") ?
+				`<a href="${url}" onclick="return OpenUrl(this.href);">` :
+				`<a href="${url}" data-ajax="false">`)
 				+ `${name||url}</a>`;
 		})
 		// link + onclick
@@ -743,7 +742,7 @@ function addMarkdown(s)
 	// convert int to 3-digit hex
 function hex(v) { return ("00" + v.toString(16)).replace(/^0+(...)/, "$1"); }
 	//returns the type name or description of a value or the value itself
-function getv( v ) { return typedesc[v] || typenames[v] || v; }
+function getv( v ) { return conf.tdesc[v] || conf.tname[v] || v; }
 	//returns a comma separated list of object keys
 function skeys( o ) { return "" + keys( o ); }
 	//replaces \ paceholders with its placeholder 'name'
@@ -917,83 +916,14 @@ ${getHead(1)}
 var 	//globals for one doc
 	Globals,
 		// app object constructor name prefixes
-	regConPrefix = /^(Create|Open)/,
-	//bases for...
-		//available typenames
-	typenames = {
-		"all":"all types",
-		"bin":"boolean",
-		"dso":"app object",
-		"fnc":"function",
-		"lst":"list",
-		"num":"number",
-		"obj":"object",
-		"str":"string",
-		"?":"unknown"
-	},
-		//special types and descriptions
-	typedesc = {
-		"lst_obj":"of objects",
-
-		"num_byt":"Bytes",
-		"num_col":"hexadecimal 0xrrggbb",
-		"num_dat":"Datetime in milliseconds (from JS Date object)",
-		"num_deg":"angle in degrees (0..360)",
-		"num_dhx":"0-255",
-		"num_fac":"factor",
-		"num_flt":"float",
-		"num_fps":"frames per second",
-		"num_frc":"fraction (0..1)",
-		"num_gbt":"Gigabytes",
-		"num_hrz":"hertz",
-		"num_int":"integer",
-		"num_met":"meters",
-		"num_mls":"milliseconds",
-		"num_mtu":"maximum transmission unit",
-		"num_prc":"percent",
-		"num_pxl":"pixel",
-		"num_rad":"angle in radient (0..2*π)",
-		"num_sec":"seconds",
-
-		"str_acc":"account Email",
-		"str_b64":"base64 encoded",
-		"str_col":'<br>&nbsp;&nbsp;hexadecimal: “#rrggbb”, “#aarrggbb”<br>&nbsp;&nbsp;colourName: “red”, “green”, ...',
-		"str_com":"comma “,” separated",
-		"str_eml":"comma separated email addresses or names",
-		"str_flt":"float",
-		"str_fmt":"format",
-		"str_htm":"html code",
-		"str_hex":"hexadecimal “00”..“FF”",
-		"str_int":"integer",
-		"str_jsc":"javascript code",
-		"str_lst":"separated",
-		"str_mim":"mimetype",
-		"str_mod":"mode",
-		"str_num":"number",
-		"str_oid":"object id “#id”",
-		"str_ort":'“Default”, “Portrait”, “Landscape”',
-		"str_pip":"pipe “|” separated",
-		"str_pth":'path to file or folder ( “/absolute/...” or “relative/...” )',
-		"str_pxl":"integer in pixels",
-		"str_smc":"semicolon “;” separated",
-		"str_sql":"sql code",
-		"str_sty":"style",
-		"str_uri":"URI encoded",
-		"str_url":"url path"
-	};
+	regConPrefix = /^(Create|Open)/;
 
 
 // ---------------------------- DocsModifier.js globs --------------------------
 
 var
-	// hide functions and methods which are matching this regex
-	regHide = /^(_.*|.+\._.*|(Create|Install)Wallpaper|Create(Object|ListView|NxtRemote|SmartWatch)|GetLast.*|(Set|Is)DebugEnabled|Odroid|Draw|Destroy|Release|Explode|Detailed|IsEngine|SetOn(Touch|Connect)Ex|id|S?Obj|ctx\.(un)?loadTexture)$/,
-		// interpret matching app. functions as control constructors
-	regControl = /^(Create(?!Debug).*|OpenDatabase|Odroid)$/,
 		// html char placeholders
 	_htm = {comma:',', colon:':', bsol:'\\', period:'.', lowbar:'_', verbar: '|', "#160":" ", nbsp:" ", ldquo: "“", rdquo: "”"},
-		// current language
-	lang = "en",
 		// cwd
 	path = __dirname + "/";
 
@@ -1007,7 +937,7 @@ function has(l, v) { return l.indexOf(v) > -1; }
 function values(o) { return Object.values(o); }
 function keys(o) { return Object.keys(o); }
 function d(v) { console.log(v); return v; }
-function saveScope() { app.WriteFile(curScope + getl() + ".json", tos(scope)); }
+function saveScope() { app.WriteFile(lang + `/${curScope.json}`, tos(scope)); }
 function sortAsc(a, b) {
 	a = a.toString().replace(/[^a-z0-9]/gi, "") || a + "";
 	b = b.toString().replace(/[^a-z0-9]/gi, "") || b + "";
@@ -1035,7 +965,6 @@ function getAbbrev(s)
 
 function ReadFile(file, dflt, write)
 {
-	if(!file.startsWith("/")) file = file;
 	if(app.FileExists(file)) return app.ReadFile(file);
 	else if(write) app.WriteFile(file, dflt);
 	return dflt;
@@ -1085,27 +1014,68 @@ function tos(o, intd, m)
 
 function OnStart()
 {
-	try {
-		if(process.argv[2] == "help")
-			return console.error("Syntax:\n\t" +
-				process.argv.slice(0, 2).join(" ").replace(path, "") +
-				" [scope.[PATTERN]] ..");
+	conf = JSON.parse(ReadFile("conf.json", '{"langs":{},"scopes":{}}', true));
+	regHide = RegExp(conf.regHide);
+	regControl = RegExp(conf.regControl);
 
-		for(var pat of process.argv.slice(2))
+	if(process.argv.length == 2) process.argv.push("");
+	for(var pat of process.argv.slice(2))
+	{
+		if(pat.startsWith("-"))
 		{
-			app.ShowProgressBar("Generating " + pat);
-			var p = pat.indexOf(".") + 1;
-			if(p) generateScope(pat.slice(0, p-1), pat.slice(p));
-			else generateScope(pat);
-			app.HideProgressBar();
+			pat = pat.split("=");
+			switch(pat[0])
+			{
+				case "-lang": lang = pat[1]; break;
+				case "-help": console.log(
+					`${process.argv.slice(0,2).join(" ").replace(path, "")} [OPTIONS] [PATTERNS]
+OPTIONS:
+	-lang=<LANG-CODE>   2 digit code, ie. en de fr pt es ..
+	                    defaults to 'en'
+	-help               this help
+
+PATTERN:
+	generates a scope in each defined language:
+		<SCOPE>[.<MEMBER-PATTERN>]
+	with specified language:
+		<LANG-CODE>[.<SCOPE>[.<MEMBER-PATTERN>]]
+
+MEMBER-PATTERN: 	    RegExp pattern
+
+EXAMPLES:
+	generate.js         generate all defined languages (in generate.js)
+	generate.js en      generate all english docs
+	generate.js en.app  generate english docs of scope 'app'
+	generate.js app     generate docs of scope 'app' in all defined languages
+	generate.js app.^C  generate all docs starting with 'C'`
+				); break;
+				default: Throw(Error("Unknown option " + pat[0]))
+			}
 		}
-	} catch(e) {
-		console.error( /*\x1b[31m*/ `while generating ${curScope} ${curDoc||''}: ${curSubf||''}` );
-		throw e;
+		else
+		{
+			var p = pat.match(/(^[a-z]{2})?(\.|^|$)([a-z]{3,})?(\.|$)(.*)?/);
+			if(!p) Throw(Error("invalid pattern " + pat));
+
+			if(p[1] && !conf.langs[p[1]]) conf.langs[p[1]] = "";
+			if(p[3] && !conf.scopes[p[3]]) conf.scopes[p[3]] = "";
+
+			for(var l in conf.langs)  if(l.match(p[1]) != null)
+			for(var s in conf.scopes) if(s.match(p[3]) != null)
+			try {
+				lang = l;
+				app.ShowProgressBar(`Generating ${l}.${s}.${p[5]||'*'}`);
+				generateScope(s, p[5]);
+				app.HideProgressBar();
+			} catch(e) {
+				console.error( /*\x1b[31m*/ `while generating ${curScope} ${curDoc||''}: ${curSubf||''}` );
+				throw e;
+			}
+		}
 	}
 }
 
-var fs = require("fs");
+var fs = require("fs-extra");
 var rimraf = require("rimraf");
 var Prism = require('prismjs');
 require('prismjs/components/prism-java.min.js');
@@ -1119,6 +1089,7 @@ if(typeof app == "undefined")
 		DeleteFile: (p) => fs.unlinkSync(absPth(p)),
 		ListFolder: (p) => fs.readdirSync(absPth(p)),
 		MakeFolder: (p) => fs.mkdirSync(absPth(p)),
+		CopyFolder: (a, b) => fs.copySync(absPth(a), absPth(b)),
 		DeleteFolder: (p) => rimraf.sync(absPth(p)),
 		FileExists: (p) => fs.existsSync(absPth(p)),
 		FolderExists: (p) => fs.existsSync(absPth(p)),
